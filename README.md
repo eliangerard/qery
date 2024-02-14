@@ -1,5 +1,5 @@
 # cloud-computing
-Repositorio para la materia de Cloud Computing
+Repositorio para el frontend del proyecto de Cloud Computing
 
 ## Integrantes
 + Iván Alejandro Arreola Chávez
@@ -8,5 +8,7 @@ Repositorio para la materia de Cloud Computing
   
 ## Proyecto
 Desarrollaremos una plataforma de atención a cliente integrable por compañías que lo requieran en sus propios sitios, a través de las tecnologías:
-+ Nextjs
-+ Mongodb
++ React
++ Tailwind
++ Express
++ PostgreSQL
