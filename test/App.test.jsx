@@ -8,4 +8,10 @@ describe('Tests on <App />', () => {
 
         expect(screen.getByText('Vite + React')).toBeTruthy();
     });
+    test('should render correctly', () => {
+
+        render(<App />);
+// aaaaaaaaaaa
+        expect(screen.getByText('Click on the Vite and React logos to learn more')).toBeTruthy();
+    });
 });
