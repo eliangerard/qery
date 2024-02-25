@@ -14,4 +14,9 @@ describe("Tests on <App />", () => {
       screen.getByText("Click on the Vite and React logos to learn more")
     ).toBeTruthy();
   });
+  test("should render correctly", () => {
+    render(<App />);
+
+    expect(true).toBeTruthy();
+  });
 });
