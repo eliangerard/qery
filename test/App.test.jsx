@@ -5,13 +5,13 @@ describe("Tests on <App />", () => {
   test("should render correctly", () => {
     render(<App />);
 
-    expect(screen.getByText("Vite + React")).toBeTruthy();
+    expect(screen.getByText("Qery.me")).toBeTruthy();
   });
   test("should render correctly", () => {
     render(<App />);
     // aaaaaaaaaaa
     expect(
-      screen.getByText("Click on the Vite and React logos to learn more")
+      screen.getByText("Conéctate con tus clientes al instante")
     ).toBeTruthy();
   });
   test("should render correctly", () => {
