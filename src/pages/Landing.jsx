@@ -54,7 +54,7 @@ export const Landing = () => {
                             <p className="absolute text-w-100 text-3xl 2xl:text-4xl text-center text-azul-300 font-medium">¿Abrirán hoy?</p>
                         </div>
                         {[...Array(2)].map((_, i) => (
-                            <div key={`q${i}`} className={`w-fit text-4xl 2xl:text-6xl text-azul-200  ${i != 0 ? 'py-8' : ''}`}>
+                            <div key={`q${i}`} className={`w-fit text-4xl 2xl:text-6xl text-azul-200  ${i == 0 ? 'py-8' : ''}`}>
                                 <b>Q</b>
                             </div>
                         ))}
