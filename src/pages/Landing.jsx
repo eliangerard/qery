@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom"
+
 export const Landing = () => {
     return (
         <div className="bg-w-100 w-full min-h-screen h-fit">
@@ -13,7 +15,7 @@ export const Landing = () => {
                     <div className="flex flex-col">
                         <div className="bg-azul-300 flex-grow skew-x-[45deg] origin-bottom">
                         </div>
-                        <button className="bg-azul-100 text-xl font-bold w-40 2xl:w-48 h-10 md:h-14 2xl:h-20 ">Login</button>
+                        <Link to={"/login"} className="flex items-center justify-center bg-azul-100 text-xl font-bold w-40 2xl:w-48 h-10 md:h-14 2xl:h-20 ">Login</Link>
                     </div>
                 </div>
             </header>
