@@ -1,42 +1,21 @@
-import { useState, useEffect } from 'react'
-import GoogleLogin from 'react-google-login'
-import { gapi } from 'gapi-script'
+import { useState } from 'react'
+import { useGoogleLogin } from '@react-oauth/google';
 
 export const Login = () => {
-  const clientID = "131255106642-pnrhidgpc4irnd8b4v8gcpkot235v60i.apps.googleusercontent.com"
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-
-    gapi.load('auth2', () => {
-      const auth2 = gapi.auth2.init({
-        client_id: clientID
-      })
-      auth2.attachClickHandler(document.getElementById('google-login'), {}, (googleUser) => {
-        console.log(googleUser)
-      }, (error) => {
-        console.log(error)
-      })
-    })
-  }, [])
-
-  const handleSuccess = (response) => {
-    setUser(response.profileObj);
-    console.log(response);
-  }
-
-  const handleFailure = (response) => {
-    console.log(response);
-  }
+  const login = useGoogleLogin({
+    onSuccess: tokenResponse => setUser(tokenResponse),
+  });
 
   return (
     <>
-      <GoogleLogin
-        clientId={clientID}
-        onSuccess={handleSuccess}
-        onFailure={handleFailure}
-        cookiePolicy={'single_host_origin'}
-      />
+      <button
+        onClick={login}
+        className='border-2 border-gray-300 p-2 rounded-md'
+      >
+        Iniciar sesión con Google
+      </button>
       <pre>
         {JSON.stringify(user, null, 2)}
       </pre>
