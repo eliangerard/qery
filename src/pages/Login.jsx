@@ -13,7 +13,7 @@ export const Login = () => {
       });
       const user = await userResponse.json();
       
-      fetch("http://192.168.110.225:3000/users/", {
+      fetch("https://api.qery.me/users/", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
