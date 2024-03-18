@@ -5,7 +5,30 @@ export const Login = () => {
   const [user, setUser] = useState(null);
 
   const login = useGoogleLogin({
-    onSuccess: tokenResponse => setUser(tokenResponse),
+    onSuccess: async tokenResponse => {
+      const userResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: {
+          Authorization: `Bearer ${tokenResponse.access_token}`,
+        },
+      });
+      const user = await userResponse.json();
+      
+      fetch("https://api.qery.me/users/", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: user.email,
+          companyName: user.name,
+          picture: user.picture,
+        }),
+      });
+
+      setUser(user);
+    
+    },
+    scope: 'profile email',
   });
 
   return (
