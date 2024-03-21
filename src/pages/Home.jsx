@@ -25,17 +25,17 @@ export const Home = () => {
                     <button onClick={() => setEdit(edit => !edit)} className="absolute bg-b-500 top-0 right-0 h-16 w-16 flex items-start justify-end p-3 rounded-bl-full">
                         <Edit className="w-8" />
                     </button>
-                    <input className={`${edit ? "border-b-2" : ""} outline-transparent focus:outline-none border-black bg-transparent transition-all duration-75 font-sans text-6xl font-bold my-4 w-full`}
+                    <input className={`${edit ? "border-b-2" : ""} outline-transparent focus:outline-none border-black bg-transparent transition-all duration-75 font-sans text-4xl 2xl:text-6xl font-bold my-4 w-full`}
                         value={edit ? editableUser.companyName : user?.companyName ? user?.companyName : "Sin nombre"}
                         onChange={(e) => setEditableUser({ ...editableUser, companyName: e.target.value })}
                         disabled={!edit}
                     />
-                    <input className={`${edit ? "border-b-2" : ""} outline-transparent focus:outline-none border-black bg-transparent transition-all duration-75 text-2xl mb-2 w-full`}
+                    <input className={`${edit ? "border-b-2" : ""} outline-transparent focus:outline-none border-black bg-transparent transition-all duration-75 text-lg 2x:text-2xl mb-2 w-full`}
                         value={edit ? editableUser.phone : user?.phone ? user?.phone : "Sin teléfono"}
                         onChange={(e) => setEditableUser({ ...editableUser, phone: e.target.value })}
                         disabled={!edit}
                     />
-                    <input className={`${edit ? "border-b-2" : ""} outline-transparent focus:outline-none border-black bg-transparent transition-all duration-75 text-2xl mb-2 w-full`}
+                    <input className={`${edit ? "border-b-2" : ""} outline-transparent focus:outline-none border-black bg-transparent transition-all duration-75 text-lg 2x:text-2xl mb-2 w-full`}
                         value={edit && editableUser?.schedule?.length > 0 ? "Horario" : user?.schedule?.length > 0 ? user?.schedule : "Sin horario"}
                         onChange={(e) => setEditableUser({ ...editableUser, schedule: e.target.value })}
                         disabled={!edit}
