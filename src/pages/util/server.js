@@ -1,0 +1,1 @@
+export const server = "https://api.qery.me/";
