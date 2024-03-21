@@ -1,5 +1,5 @@
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom"
-import { Home, Landing, Login } from "../pages"
+import { Home, Landing } from "../pages"
 import Users from "../pages/admin/Users"
 import { useContext, useEffect } from "react"
 import UserContext from "../context/UserContext"
