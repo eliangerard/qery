@@ -3,13 +3,14 @@ import { useEffect } from "react";
 import User from "../../ui/admin/User";
 import { Logo } from "../../ui/Icons/Logo";
 import { useNavigate } from "react-router-dom";
+import { server } from "../util/server";
 
 const Users = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetch("https://api.qery.me/users/all")
+    fetch(server + "users/all")
       .then((res) => res.json())
       .then((res) => {
         setUsers(res);

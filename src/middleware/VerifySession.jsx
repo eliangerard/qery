@@ -3,6 +3,7 @@ import { Home, Landing, Login } from "../pages"
 import Users from "../pages/admin/Users"
 import { useContext, useEffect } from "react"
 import UserContext from "../context/UserContext"
+import { server } from "../pages/util/server"
 
 export const VerifySession = () => {
 
@@ -20,7 +21,7 @@ export const VerifySession = () => {
         const loadSession = async () => {
             const token = localStorage.getItem('token');
             try {
-                const user = await fetch("http://localhost:3000/users", {
+                const user = await fetch(server + "users", {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${token}`,
@@ -28,7 +29,7 @@ export const VerifySession = () => {
                 }).then(res => res.json()).then(res => res);
                 console.log(user);
                 setUser(user);
-                if(pathname === '/') navigate('/home');
+                if (pathname === '/') navigate('/home');
             } catch (error) {
                 navigate('/')
             }
