@@ -1,20 +1,17 @@
-import { Landing } from './pages/Landing';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Login } from './pages/Login';
-import Users from './pages/admin/Users';
+import { VerifySession } from './middleware/VerifySession';
+import { UserProvider } from './context/UserProvider';
 
 function App() {
 
   return (
-    <>
+    <UserProvider>
       <BrowserRouter>
         <Routes>
-          <Route path='/login' element={<Login />} />
-          <Route path='/' element={<Landing />} />
-          <Route path='/admin/users' element={<Users />} />
+          <Route path="/*" element={<VerifySession />} />
         </Routes>
       </BrowserRouter>
-    </>
+    </UserProvider>
   )
 }
 
