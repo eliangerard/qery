@@ -40,7 +40,6 @@ export const VerifySession = () => {
 
     return (
         <Routes>
-            <Route path='/login' element={<Login />} />
             <Route path='/home' element={<Home />} />
             <Route path='/' element={<Landing />} />
             <Route path='/admin/users' element={<Users />} />
