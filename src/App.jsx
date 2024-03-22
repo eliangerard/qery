@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { VerifySession } from './middleware/VerifySession';
 import { UserProvider } from './context/UserProvider';
+import { Client } from './pages/user/Client';
 
 function App() {
 
@@ -8,6 +9,7 @@ function App() {
     <UserProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="/user/:username" element={<Client/>}/>
           <Route path="/*" element={<VerifySession />} />
         </Routes>
       </BrowserRouter>
