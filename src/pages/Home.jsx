@@ -63,7 +63,7 @@ export const Home = () => {
                     <button className="relative bg-ab-500 w-16 flex items-center justify-center pr-1 pt-2 rounded-t-full h-[4.5rem] hover:translate-y-[-0.5rem] active:translate-y-[-1rem] transition-all duration-75 z-10"
                         onClick={() => {
                             const company = encodeURI(user?.companyName.toLowerCase())
-                            const link = server + "user/" + company;
+                            const link = "https://qery.me/user/" + company;
                             navigator.clipboard.writeText(link);
                             setShowCopied(true);
                             setTimeout(() => setShowCopied(false), 2000);
