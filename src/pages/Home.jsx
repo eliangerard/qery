@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import UserContext from "../context/UserContext";
 import { Add } from "../ui/Icons/Add";
 import { Share } from "../ui/Icons/Share";
+import { server } from "./util/server";
 
 export const Home = () => {
 
@@ -20,7 +21,7 @@ export const Home = () => {
     return (
         <div className="grid grid-cols-4 w-full h-full">
             <div className="w-full h-full bg-accent-500">
-                <img className="w-full" src={user?.picture?.substring(0, user?.picture?.indexOf("="))} alt="" />
+                <img className="w-full h-1/2 object-cover" src={user?.picture?.substring(0, user?.picture?.indexOf("="))} alt="" />
                 <div className="relative p-4 px-8">
                     <button onClick={() => setEdit(edit => !edit)} className="absolute bg-b-500 top-0 right-0 h-16 w-16 flex items-start justify-end p-3 rounded-bl-full">
                         <Edit className="w-8" />
@@ -62,7 +63,7 @@ export const Home = () => {
                     <button className="relative bg-ab-500 w-16 flex items-center justify-center pr-1 pt-2 rounded-t-full h-[4.5rem] hover:translate-y-[-0.5rem] active:translate-y-[-1rem] transition-all duration-75 z-10"
                         onClick={() => {
                             const company = encodeURI(user?.companyName.toLowerCase())
-                            const link = "https://qery.me/" + company;
+                            const link = server + "user/" + company;
                             navigator.clipboard.writeText(link);
                             setShowCopied(true);
                             setTimeout(() => setShowCopied(false), 2000);
