@@ -12,6 +12,7 @@ export const Client = () => {
 
     const { username } = useParams();
     const [user, setUser] = useState({ id: uuidv4() });
+    const [company, setCompany] = useState({});
     const [showCopied, setShowCopied] = useState(false);
 
     const [showLeft, setShowLeft] = useState(false);
@@ -29,9 +30,18 @@ export const Client = () => {
     });
 
     useEffect(() => {
+        const loadUser = async () => {
+            const res = await fetch(`${server}/users/${encodeURI(username)}`).then(res => res.json()).then(res => res);
+            setCompany(res);
+        }
+        loadUser();
+    }, [username])
+
+    useEffect(() => {
         socket.on('connect', () => console.log("Connected to server"));
         socket.on('disconnect', () => console.log("Disconnected from server"));
-        socket.on('chat message', (message) => {
+
+        socket.on('new message', (message) => {
             console.log("Message received", message);
             if (message.user == user.id) return;
             setConversation((conv) => ({ ...conv, messages: [...conv.messages, message] }));
@@ -40,13 +50,13 @@ export const Client = () => {
         return () => {
             socket.off('connect');
             socket.off('disconnect');
-            socket.off('chat message');
+            socket.off('new message');
         }
     }, [])
 
     return (
         <div className="flex w-full h-full">
-            <Profile company={user} showLeft={showLeft} setShowLeft={setShowLeft}/>
+            <Profile company={company} showLeft={showLeft} setShowLeft={setShowLeft}/>
             <div className="relative flex flex-col flex-1 h-full col-span-2 bg-w-500 px-4 md:px-12 py-8 transition-all">
                 <div className="flex absolute top-0 left-0 w-full justify-between">
                     <div className="flex relative">
@@ -82,7 +92,8 @@ export const Client = () => {
                         >FAQ</button>
                     </div>
                 </div>
-                <h2 className="text-5xl mt-12 font-bold mb-4">Chatea</h2>
+                <h2 className="text-5xl mt-12 font-bold mb-4 text-center">Chatea con</h2>
+                {conversation.messages.length > 0 ? 
                 <div className="flex flex-col-reverse grow mb-20 overflow-y-auto">
                     <div className="w-full h-fit flex flex-col items-end">
                         {conversation.messages.map((message, index) => (
@@ -98,9 +109,13 @@ export const Client = () => {
                                         <p className="bg-b-500 text-white max-w-full flex-1 items-center px-2 py-1">{message.content}</p>
                                     </div>
                                 </div>
-                        ))}
+                        ))
+                        
+                    }
                     </div>
                 </div>
+                : <p className="text-center">¡Consulta cualquier duda que tengas!</p>
+                }
 
                 <div className="flex absolute bottom-12 flex-1 w-full left-0 px-12">
                     <div className="bg-ab-500 h-12 w-12 items-center justify-center flex text-xl">
@@ -136,7 +151,7 @@ export const Client = () => {
                 </div>
 
             </div>
-            <FAQs clientSide={true} showRight={showRight} setShowRight={setShowRight}/>
+            <FAQs clientSide={true} showRight={showRight} setShowRight={setShowRight} />
         </div>
     )
 }
