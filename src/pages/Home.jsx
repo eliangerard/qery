@@ -5,82 +5,112 @@ import { Link } from "react-router-dom";
 import UserContext from "../context/UserContext";
 import { Add } from "../ui/Icons/Add";
 import { Share } from "../ui/Icons/Share";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { Back } from "../ui/Icons/Back";
+import { Profile } from "../components/Profile";
+import { FAQs } from "../components/FAQs";
+import { Chat } from "../components/Chat";
+import { socket } from "./util/socket";
+import { ChatComplete } from "./ChatComplete";
 import { server } from "./util/server";
 
 export const Home = () => {
 
     const { user } = useContext(UserContext);
 
-    const [edit, setEdit] = useState(false);
-    const [editableUser, setEditableUser] = useState(user);
+    const [showLeft, setShowLeft] = useState(false);
+    const [showRight, setShowRight] = useState(false);
 
     const [showCopied, setShowCopied] = useState(false);
 
-    useEffect(() => setEditableUser(user), [user]);
+    const [conversations, setConversations] = useState([]);
+
+    useEffect(() => {
+        socket.on('connect', () => console.log("Connected to server"));
+        socket.on('new conversation', (conversation) => {
+            console.log("New conversation", conversation);
+            setConversations((conv) => [...conv, conversation])
+        });
+        socket.on('new message', (message) => {
+            console.log("New message", message);
+            setConversations((conv) => {
+                console.log("Conversation", conv);
+
+                return conv.map((chat) => {
+                    if (chat.id === message.conversation) {
+                        return { ...chat, messages: [...chat.messages, message] }
+                    }
+                    return chat;
+
+                })
+            })
+        });
+
+        fetch(`${server}/conversations`).then(res => res.json()).then(res => {
+            console.log("Conversations", res);
+            setConversations(res)
+        });
+
+        return () => {
+            socket.off('connect');
+            socket.off('new conversation');
+        }
+    }, [])
 
     return (
-        <div className="grid grid-cols-4 w-full h-full">
-            <div className="w-full h-full bg-accent-500">
-                <img className="w-full h-1/2 object-cover" src={user?.picture?.substring(0, user?.picture?.indexOf("="))} alt="" />
-                <div className="relative p-4 px-8">
-                    <button onClick={() => setEdit(edit => !edit)} className="absolute bg-b-500 top-0 right-0 h-16 w-16 flex items-start justify-end p-3 rounded-bl-full">
-                        <Edit className="w-8" />
-                    </button>
-                    <input className={`${edit ? "border-b-2" : ""} outline-transparent focus:outline-none border-black bg-transparent transition-all duration-75 font-sans text-4xl 2xl:text-6xl font-bold my-4 w-full`}
-                        value={edit ? editableUser.companyName : user?.companyName ? user?.companyName : "Sin nombre"}
-                        onChange={(e) => setEditableUser({ ...editableUser, companyName: e.target.value })}
-                        disabled={!edit}
-                    />
-                    <input className={`${edit ? "border-b-2" : ""} outline-transparent focus:outline-none border-black bg-transparent transition-all duration-75 text-lg 2x:text-2xl mb-2 w-full`}
-                        value={edit ? editableUser.phone : user?.phone ? user?.phone : "Sin teléfono"}
-                        onChange={(e) => setEditableUser({ ...editableUser, phone: e.target.value })}
-                        disabled={!edit}
-                    />
-                    <input className={`${edit ? "border-b-2" : ""} outline-transparent focus:outline-none border-black bg-transparent transition-all duration-75 text-lg 2x:text-2xl mb-2 w-full`}
-                        value={edit && editableUser?.schedule?.length > 0 ? "Horario" : user?.schedule?.length > 0 ? user?.schedule : "Sin horario"}
-                        onChange={(e) => setEditableUser({ ...editableUser, schedule: e.target.value })}
-                        disabled={!edit}
-                    />
-                </div>
-                <button className="bg-ab-500 text-white px-4 py-2 font-bold absolute bottom-8 left-8"
-                    onClick={() => {
-                        localStorage.removeItem('token');
-                        window.location.reload();
-                    }}
-                >Cerrar sesión</button>
-            </div>
-            <div className="relative w-full h-full col-span-2 bg-w-500 px-12 py-8">
-                <Link to="/home">
-                    <Logo className="absolute h-16 top-0 right-0" />
-                </Link>
-                <h2 className="text-5xl font-bold">Preguntas comunes</h2>
-                <div className="flex flex-col justify-center items-center my-10">
-                    <p className="text-xl mb-4">Aún no has añadido preguntas frecuentes.</p>
-                    <Add className="w-12" />
-                    <p className="text-xl mt-4">Puedes agregar más dudas comunes de tus clientes.</p>
-                </div>
-                <div className="absolute flex items-end h-24 bottom-0 left-12">
-                    <button className="relative bg-ab-500 w-16 flex items-center justify-center pr-1 pt-2 rounded-t-full h-[4.5rem] hover:translate-y-[-0.5rem] active:translate-y-[-1rem] transition-all duration-75 z-10"
-                        onClick={() => {
-                            const company = encodeURI(user?.companyName.toLowerCase())
-                            const link = "https://qery.me/user/" + company;
-                            navigator.clipboard.writeText(link);
-                            setShowCopied(true);
-                            setTimeout(() => setShowCopied(false), 2000);
-                        }}
-                    >
-                        <div className={`${showCopied ? "opacity-100 max-h-8 p-2" : "opacity-0 max-h-0"} absolute bg-white w-40 overflow-hidden top-[-3rem] left-1/2 translate-x-[-50%] rounded-full transition-all`}>
-                            <p className="font-semibold text-sm">¡Enlace copiado!</p>
+        <div className="relative flex w-full h-full relative overflow-hidden">
+            <Profile showLeft={showLeft} setShowLeft={setShowLeft} />
+            <div className="relative flex justify-center flex-1 h-full col-span-2 bg-w-500 px-4 md:px-12 py-8 transition-all">
+                <div className="flex absolute top-0 left-0 w-full justify-between">
+                    <div className="flex relative">
+                        <button className={`flex relative z-50 ${showLeft ? "left-[25rem]" : "left-0"} lg:left-0 items-center justify-center pt-0.5 w-12 h-12 text-xl bg-accent-500 font-bold text-accent-500 transition-all`}
+                            onClick={() => setShowLeft(show => !show)}
+                        >
+                            <div className="rounded-full flex items-center justify-center bg-black text-sm h-6 w-6">i</div>
+                        </button>
+                        <div className="relative flex h-12">
+                            <button className="relative bg-ab-500 w-12 h-12 flex items-center justify-center pr-1 pt-1 rounded-r-full hover:translate-x-[0.5rem] active:translate-x-[0.2rem] transition-all duration-75 z-10"
+                                onClick={() => {
+                                    const company = encodeURI(user?.companyName.toLowerCase())
+                                    const link = "https://qery.me/user/" + company;
+                                    navigator.clipboard.writeText(link);
+                                    setShowCopied(true);
+                                    setTimeout(() => setShowCopied(false), 2000);
+                                }}
+                            >
+                                <div className={`${showCopied ? "opacity-100 max-h-8 p-2" : "opacity-0 max-h-0"} absolute bg-white w-40 overflow-hidden right-[-100%] translate-x-[75%] top-1/2 translate-y-[-50%] rounded-full transition-all`}>
+                                    <p className="font-semibold text-sm">¡Enlace copiado!</p>
+                                </div>
+                                <Share className="w-4" />
+                            </button>
+                            <div className="absolute w-4 bg-ab-500 h-12 left-0 top-0"></div>
                         </div>
-                        <Share className="w-8" />
-                    </button>
-                    <div className="absolute h-8 bg-ab-500 w-full bottom-0 left-0"></div>
+                    </div>
+                    <div className="flex">
+                        <Link to="/home">
+                            <Logo className="h-12" />
+                        </Link>
+                        <button className={`${showRight ? "right-[28rem]" : "right-0"} xl:right-0 relative z-10 h-12 w-12 flex items-center justify-center bg-b-500 text-white font-bold transition-all`}
+                            onClick={() => setShowRight(show => !show)}
+                        >FAQ</button>
+                    </div>
+                </div>
+                <div className="flex flex-col w-full pt-12 max-w-screen-md">
+                    <Routes>
+                        <Route path="/" element={(
+                            <>
+                                <h2 className="text-5xl font-bold mb-4">Chats</h2>
+                                {conversations.map((chat) => (
+                                    <Chat key={chat.id} {...chat} lastMessage={chat.messages[chat.messages.length - 1]} newMessages={chat.messages.length} />
+                                ))}
+                            </>
+                        )} />
+                        <Route path="/chat/:id" element={<ChatComplete />} />
+                        <Route path="/*" element={<Navigate to={"/"} />} />
+                    </Routes>
                 </div>
             </div>
-            <div className="w-full h-full bg-b-500 py-8 px-4">
-                <h2 className="text-5xl font-bold text-white text-center">Inbox</h2>
-                <p className="text-center text-xl text-white my-4 italic">Sin preguntas pendientes, ¡Bien hecho!</p>
-            </div>
+            <FAQs showRight={showRight} setShowRight={setShowRight} />
         </div>
     )
 }
