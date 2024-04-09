@@ -92,7 +92,7 @@ export const Client = () => {
                         >FAQ</button>
                     </div>
                 </div>
-                <h2 className="text-5xl mt-12 font-bold mb-4 text-center">Chatea con</h2>
+                <h2 className="text-5xl mt-12 font-bold mb-4 text-center">Chatea con {company?.companyName}</h2>
                 {conversation.messages.length > 0 ? 
                 <div className="flex flex-col-reverse grow mb-20 overflow-y-auto">
                     <div className="w-full h-fit flex flex-col items-end">
