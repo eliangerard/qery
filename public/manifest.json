@@ -1,0 +1,24 @@
+{
+    "name": "Qery",
+    "short_name": "Qery",
+    "description": "Qery mobile",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#fff",
+    "icons": [
+        {
+            "src": "/anylogo.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/masklogo.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+  }
+  

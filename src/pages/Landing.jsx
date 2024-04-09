@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom"
-import { Aside } from "../ui/Icons/Aside"
-import { Messages } from "../ui/Icons/Messages"
+import { Aside, MobileAside } from "../ui/Icons/Aside"
+import { Messages, ResponsiveMessages } from "../ui/Icons/Messages"
 import { GuyL } from "../ui/Icons/GuyL"
 import { GuyR } from "../ui/Icons/GuyR"
 import { useGoogleLogin } from "@react-oauth/google"
@@ -12,21 +12,22 @@ export const Landing = () => {
     const login = useGoogleLogin({
         onSuccess: async tokenResponse => {
             localStorage.setItem('token', tokenResponse.access_token);
-            navigate('/home');
+            navigate('/');
         }
     });
 
     return (
         <div className="flex relative items-center h-full overflow-hidden">
-            <Aside className="min-h-screen h-screen px-4" />
-            <div className="relative z-10">
-                <h1 className="text-8xl 2xl:text-[10rem] font-bold left-[-5.8rem] 2xl:left-[-9rem] relative">Qery.me</h1>
-                <div className="w-96 2xl:w-[32rem]">
-                    <p className="text-2xl 2xl:text-4xl my-3 2xl:my-8 ">Conéctate con tus clientes al instante</p>
-                    <button className="flex items-center justify-center bg-ab-500 text-white w-fit text-center font-bold p-4 px-12 text-xl 2xl:text-2xl"
+            <Aside className="h-full pl-4 min-w-fit lg:block hidden" />
+            <MobileAside className="h-full lg:hidden min-w-fit" />
+            <div className="relative flex-1 md:left-0 z-10">
+                <h1 className="text-7xl md:text-8xl 2xl:text-[10rem] font-bold left-[-3.6rem] md:left-[-5.8rem] 2xl:left-[-9rem] relative">Qery.me</h1>
+                <div>
+                    <p className="text-xl pr-12 md:text-2xl 2xl:text-4xl my-3 2xl:my-8 ">Conéctate con tus clientes al instante</p>
+                    <button className="flex items-center justify-center bg-ab-500 text-white w-fit text-center font-bold p-2 md:p-4 md:px-12 text-lg md:text-xl 2xl:text-2xl"
                         onClick={login}
                     >
-                        <svg className="h-7 mr-4" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                        <svg className="h-5 mr-2 md:h-7 md:mr-4" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg"> 
 
                             <title>google [#178]</title>
                             <desc>Created with Sketch.</desc>
@@ -47,10 +48,14 @@ export const Landing = () => {
                     </button>
                 </div>
             </div >
-            <div className="absolute left-2/4 flex h-full w-2/5 flex-col justify-end">
-                <Messages className="flex-1 w-full pt-8" />
+            <div className="absolute right-0 lg:left-2/4 flex h-full w-1/2 lg:w-2/5 flex-col justify-end">
+                <Messages className="flex-1 w-full pt-8 md:block hidden" />
+                <div className="lg:hidden h-full flex flex-col justify-between">
+                    <ResponsiveMessages className="w-full rotate-180 -scale-x-100" />
+                    <ResponsiveMessages className="w-full" />
+                </div>
                 <div className="flex w-full justify-between items-end">
-                    <GuyL className="w-80" />
+                    <GuyL className="w-80 mr-12 lg:mr-0" />
                     <GuyR className="w-80" />
                 </div>
             </div>

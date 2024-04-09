@@ -9,7 +9,7 @@ export const VerifySession = () => {
 
     const navigate = useNavigate();
 
-    const { setUser } = useContext(UserContext);
+    const { user, setUser } = useContext(UserContext);
     const { pathname } = useLocation();
 
 
@@ -21,7 +21,7 @@ export const VerifySession = () => {
         const loadSession = async () => {
             const token = localStorage.getItem('token');
             try {
-                const user = await fetch(server + "users", {
+                const user = await fetch(`${server}/users`, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${token}`,
@@ -29,21 +29,23 @@ export const VerifySession = () => {
                 }).then(res => res.json()).then(res => res);
                 console.log(user);
                 setUser(user);
-                if (pathname === '/') navigate('/home');
             } catch (error) {
                 navigate('/')
             }
         }
 
         loadSession();
-
     }, [pathname])
 
     return (
-        <Routes>
-            <Route path='/home' element={<Home />} />
-            <Route path='/' element={<Landing />} />
-            <Route path='/admin/users' element={<Users />} />
-        </Routes>
+        <>
+            {user &&
+                <Routes>
+                    <Route path='/*' element={<Home />} />
+                    <Route path='/' element={user ? <Home /> : <Landing />} />
+                    <Route path='/admin/users' element={<Users />} />
+                </Routes>
+            }
+        </>
     )
 }
