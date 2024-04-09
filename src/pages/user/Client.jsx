@@ -55,7 +55,7 @@ export const Client = () => {
     }, [])
 
     return (
-        <div className="flex w-full h-full">
+        <div className="relative flex w-full h-full relative overflow-hidden">
             <Profile company={company} showLeft={showLeft} setShowLeft={setShowLeft}/>
             <div className="relative flex flex-col flex-1 h-full col-span-2 bg-w-500 px-4 md:px-12 py-8 transition-all">
                 <div className="flex absolute top-0 left-0 w-full justify-between">

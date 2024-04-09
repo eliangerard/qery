@@ -36,7 +36,7 @@ export const ChatComplete = () => {
 	}, []);
 
 	return (
-		<>
+        <>
 			<h2 className="text-5xl mt-12 font-bold mb-4 w-full">Chat con {id}</h2>
 			<div className="flex flex-col-reverse grow mb-8 overflow-y-auto">
 				<div className="w-full h-fit flex flex-col items-end">
