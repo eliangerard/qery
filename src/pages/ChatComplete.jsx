@@ -18,6 +18,7 @@ export const ChatComplete = () => {
 
 	useEffect(() => {
 		socket.on('new message', (message) => {
+			if (message.user == user._id) return;
 			console.log("New message", message);
 			setConversation((conv) => {
 				console.log("Conversation", conv);
