@@ -12,13 +12,13 @@ export const Landing = () => {
     const login = useGoogleLogin({
         onSuccess: async tokenResponse => {
             localStorage.setItem('token', tokenResponse.access_token);
-            navigate('/home');
+            navigate('/');
         }
     });
 
     return (
         <div className="flex relative items-center h-full overflow-hidden">
-            <Aside className="h-full min-w-fit lg:block hidden" />
+            <Aside className="h-full pl-4 min-w-fit lg:block hidden" />
             <MobileAside className="h-full lg:hidden min-w-fit" />
             <div className="relative flex-1 md:left-0 z-10">
                 <h1 className="text-7xl md:text-8xl 2xl:text-[10rem] font-bold left-[-3.6rem] md:left-[-5.8rem] 2xl:left-[-9rem] relative">Qery.me</h1>
