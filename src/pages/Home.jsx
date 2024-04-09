@@ -99,10 +99,15 @@ export const Home = () => {
                     <Routes>
                         <Route path="/" element={(
                             <>
-                                <h2 className="text-5xl font-bold mb-4">Chats</h2>
-                                {conversations.map((chat) => (
-                                    <Chat key={chat.id} {...chat} lastMessage={chat.messages[chat.messages.length - 1]} newMessages={chat.messages.length} />
-                                ))}
+                                <h2 className="text-5xl font-bold mb-4 text-center">Tus Chats</h2>
+                                {
+                                    conversations.length ?
+                                        conversations.map((chat) => (
+                                            <Chat key={chat.id} {...chat} lastMessage={chat.messages[chat.messages.length - 1]} newMessages={chat.messages.length} />
+                                        ))
+                                        :
+                                        <p className="text-center text-lg">Aún no tienes chats, ¡Comparte tu link para comenzar!</p>
+                                    }
                             </>
                         )} />
                         <Route path="/chat/:id" element={<ChatComplete />} />
