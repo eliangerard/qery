@@ -58,7 +58,7 @@ export const Client = () => {
         <div className="relative flex w-full h-full relative overflow-hidden">
             <Profile company={company} showLeft={showLeft} setShowLeft={setShowLeft}/>
             <div className="relative flex flex-col flex-1 h-full col-span-2 bg-w-500 px-4 md:px-12 py-8 transition-all">
-                <div className="flex absolute top-0 left-0 w-full justify-between">
+                <div className="flex absolute top-0 left-0 w-full max-w-screen-md justify-between">
                     <div className="flex relative">
                         <button className={`flex relative z-50 ${showLeft ? "left-[25rem]" : "left-0"} lg:left-0 items-center justify-center pt-0.5 w-12 h-12 text-xl bg-accent-500 font-bold text-accent-500 transition-all`}
                             onClick={() => setShowLeft(show => !show)}
@@ -94,7 +94,7 @@ export const Client = () => {
                 </div>
                 <h2 className="text-5xl mt-12 font-bold mb-4 text-center">Chatea con {company?.companyName}</h2>
                 {conversation.messages.length > 0 ? 
-                <div className="flex flex-col-reverse grow mb-20 overflow-y-auto">
+                <div className="flex flex-col-reverse grow mb-8 overflow-y-auto">
                     <div className="w-full h-fit flex flex-col items-end">
                         {conversation.messages.map((message, index) => (
                             user.id == message.user ?
@@ -117,15 +117,34 @@ export const Client = () => {
                 : <p className="text-center">¡Consulta cualquier duda que tengas!</p>
                 }
 
-                <div className="flex absolute bottom-12 flex-1 w-full left-0 px-12">
+                <div className="flex relative bottom-0 w-full left-0">
                     <div className="bg-ab-500 h-12 w-12 items-center justify-center flex text-xl">
                         <p className="font-sans font-bold text-white">Q</p>
                     </div>
                     <input
-                        className="bg-accent-500 flex-1 text-lg placeholder:text-black/75 px-2"
+                        className="bg-accent-500 flex-1 text-lg placeholder:text-black/75 px-2 focus:outline-none"
                         type="text"
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)} placeholder="Envía un mensaje"
+                        onKeyPress={(e) => {
+                            if (e.key === 'Enter' && newMessage !== "") {
+                                const message = {
+                                    conversation: conversation.id,
+                                    id: uuidv4(),
+                                    user: user.id,
+                                    content: newMessage.trim()
+                                };
+
+                                socket.emit('chat message', message, (error) => {
+                                    if (error) return console.log(error);
+                                    console.log("Message sent");
+                                });
+
+                                setNewMessage("");
+
+                                return setConversation((conv) => ({ ...conv, messages: [...conv.messages, message] }));
+                            }
+                        }}
                     />
                     <button className="bg-ab-500 w-12 h-12 flex items-center justify-center pr-0.5"
                         onClick={() => {

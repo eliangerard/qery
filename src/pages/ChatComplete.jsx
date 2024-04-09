@@ -61,11 +61,30 @@ export const ChatComplete = () => {
 					<p className="font-sans font-bold text-white">Q</p>
 				</div>
 				<input
-					className="bg-accent-500 flex-1 text-lg placeholder:text-black/75 px-2 h-12"
+					className="bg-accent-500 flex-1 text-lg placeholder:text-black/75 px-2 h-12 focus:outline-none"
 					type="text"
 					value={newMessage}
 					onChange={(e) => setNewMessage(e.target.value)}
 					placeholder="Envía un mensaje"
+					onKeyPress={(e) => {
+						if (e.key === 'Enter' && newMessage !== "") {
+							const message = {
+								conversation: conversation.id,
+								id: uuidv4(),
+								user: user.id,
+								content: newMessage.trim()
+							};
+
+							socket.emit('chat message', message, (error) => {
+								if (error) return console.log(error);
+								console.log("Message sent");
+							});
+
+							setNewMessage("");
+
+							return setConversation((conv) => ({ ...conv, messages: [...conv.messages, message] }));
+						}
+					}}
 				/>
 				<button className="bg-ab-500 w-12 h-12 flex items-center justify-center pr-0.5"
 					onClick={() => {
