@@ -9,6 +9,8 @@ export const Profile = ({ company, showLeft, setShowLeft }) => {
     const [editableUser, setEditableUser] = useState(user);
     const container = useRef(null);
 
+    console.log("companyn", company);
+
     useEffect(() => setEditableUser(user), [user]);
 
     useEffect(() => {
@@ -31,16 +33,18 @@ export const Profile = ({ company, showLeft, setShowLeft }) => {
             </div>
             <img className="w-full h-1/2 object-cover" src={company ? company?.picture?.substring(0, company?.picture?.indexOf("=")) : user?.picture?.substring(0, user?.picture?.indexOf("="))} alt="" />
             <div className="relative p-2">
-                <button onClick={() => setEdit(edit => !edit)} className="absolute bg-b-500 top-0 right-0 h-16 w-16 flex items-start justify-end p-3 rounded-bl-full">
-                    <Edit className="w-8" />
-                </button>
+                {!company &&
+                    <button onClick={() => setEdit(edit => !edit)} className="absolute bg-b-500 top-0 right-0 h-16 w-16 flex items-start justify-end p-3 rounded-bl-full">
+                        <Edit className="w-8" />
+                    </button>
+                }
                 <input className={`${edit ? "border-b-2" : ""} outline-transparent focus:outline-none border-black bg-transparent transition-all duration-75 font-sans text-4xl 2xl:text-6xl font-bold my-4 w-full`}
-                    value={edit ? editableUser.companyName : user?.companyName ? user?.companyName : "Sin nombre"}
+                    value={company ? company?.companyName : edit ? editableUser.companyName : user?.companyName ? user?.companyName : "Sin nombre"}
                     onChange={(e) => setEditableUser({ ...editableUser, companyName: e.target.value })}
                     disabled={!edit}
                 />
                 <input className={`${edit ? "border-b-2" : ""} outline-transparent focus:outline-none border-black bg-transparent transition-all duration-75 text-lg 2x:text-2xl mb-2 w-full`}
-                    value={edit ? editableUser.phone : user?.phone ? user?.phone : "Sin teléfono"}
+                    value={company ? company?.phone ? company.phone : "Sin teléfono" : edit ? editableUser.phone : user?.phone ? user?.phone : "Sin teléfono"}
                     onChange={(e) => setEditableUser({ ...editableUser, phone: e.target.value })}
                     disabled={!edit}
                 />
@@ -50,12 +54,14 @@ export const Profile = ({ company, showLeft, setShowLeft }) => {
                     disabled={!edit}
                 />
             </div>
-            <button className="bg-ab-500 text-white px-4 py-2 font-bold absolute bottom-8 left-8"
-                onClick={() => {
-                    localStorage.removeItem('token');
-                    window.location.reload();
-                }}
-            >Cerrar sesión</button>
+            {!company &&
+                <button className="bg-ab-500 text-white px-4 py-2 font-bold absolute bottom-8 left-8"
+                    onClick={() => {
+                        localStorage.removeItem('token');
+                        window.location.reload();
+                    }}
+                >Cerrar sesión</button>
+            }
         </div>
     )
 }
