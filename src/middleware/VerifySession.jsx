@@ -38,10 +38,14 @@ export const VerifySession = () => {
     }, [pathname])
 
     return (
-        <Routes>
-            <Route path='/*' element={<Home/>} />
-            <Route path='/' element={user ? <Home/> : <Landing />} />
-            <Route path='/admin/users' element={<Users />} />
-        </Routes>
+        <>
+            {user &&
+                <Routes>
+                    <Route path='/*' element={<Home />} />
+                    <Route path='/' element={user ? <Home /> : <Landing />} />
+                    <Route path='/admin/users' element={<Users />} />
+                </Routes>
+            }
+        </>
     )
 }
