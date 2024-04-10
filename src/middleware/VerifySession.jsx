@@ -42,7 +42,7 @@ export const VerifySession = () => {
     }, [pathname])
 
     return (
-        <> {!loadingSession && user &&
+        <> { ((!loadingSession && user ) || (!localStorage.getItem("token") && !user)) &&
             <Routes>
                 <Route path='/*' element={<Home />} />
                 <Route path='/' element={user ? <Home /> : <Landing />} />

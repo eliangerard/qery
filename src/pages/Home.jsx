@@ -1,12 +1,6 @@
 import { useContext, useEffect, useState } from "react"
-import { Edit } from "../ui/Icons/Edit";
-import { Logo } from "../ui/Icons/Logo";
-import { Link } from "react-router-dom";
 import UserContext from "../context/UserContext";
-import { Add } from "../ui/Icons/Add";
-import { Share } from "../ui/Icons/Share";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { Back } from "../ui/Icons/Back";
 import { Profile } from "../components/Profile";
 import { FAQs } from "../components/FAQs";
 import { Chat } from "../components/Chat";
