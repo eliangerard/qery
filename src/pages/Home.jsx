@@ -13,6 +13,7 @@ import { Chat } from "../components/Chat";
 import { socket } from "./util/socket";
 import { ChatComplete } from "./ChatComplete";
 import { server } from "./util/server";
+import { Header } from "../ui/Header";
 
 export const Home = () => {
 
@@ -21,12 +22,10 @@ export const Home = () => {
     const [showLeft, setShowLeft] = useState(false);
     const [showRight, setShowRight] = useState(false);
 
-    const [showCopied, setShowCopied] = useState(false);
-
     const [conversations, setConversations] = useState([]);
 
     useEffect(() => {
-        socket.on('connect', () => console.log("Connected to server"));
+        socket.emit('company', user);
         socket.on('new conversation', (conversation) => {
             console.log("New conversation", conversation);
             setConversations((conv) => [...conv, conversation])
@@ -46,7 +45,12 @@ export const Home = () => {
             })
         });
 
-        fetch(`${server}/conversations`).then(res => res.json()).then(res => {
+        fetch(`${server}/conversations`, {
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('token')}`
+			}
+		}).then(res => res.json()).then(res => {
             console.log("Conversations", res);
             setConversations(res)
         });
@@ -61,40 +65,7 @@ export const Home = () => {
         <div className="relative flex w-full h-full relative overflow-hidden">
             <Profile showLeft={showLeft} setShowLeft={setShowLeft} />
             <div className="relative flex justify-center flex-1 h-full col-span-2 bg-w-500 px-4 md:px-12 py-8 transition-all">
-                <div className="flex absolute top-0 left-0 w-full justify-between">
-                    <div className="flex relative">
-                        <button className={`flex relative z-50 ${showLeft ? "left-[25rem]" : "left-0"} lg:left-0 items-center justify-center pt-0.5 w-12 h-12 text-xl bg-accent-500 font-bold text-accent-500 transition-all`}
-                            onClick={() => setShowLeft(show => !show)}
-                        >
-                            <div className="rounded-full flex items-center justify-center bg-black text-sm h-6 w-6">i</div>
-                        </button>
-                        <div className="relative flex h-12">
-                            <button className="relative bg-ab-500 w-12 h-12 flex items-center justify-center pr-1 pt-1 rounded-r-full hover:translate-x-[0.5rem] active:translate-x-[0.2rem] transition-all duration-75 z-10"
-                                onClick={() => {
-                                    const company = encodeURI(user?.companyName.toLowerCase())
-                                    const link = "https://qery.me/user/" + company;
-                                    navigator.clipboard.writeText(link);
-                                    setShowCopied(true);
-                                    setTimeout(() => setShowCopied(false), 2000);
-                                }}
-                            >
-                                <div className={`${showCopied ? "opacity-100 max-h-8 p-2" : "opacity-0 max-h-0"} absolute bg-white w-40 overflow-hidden right-[-100%] translate-x-[75%] top-1/2 translate-y-[-50%] rounded-full transition-all`}>
-                                    <p className="font-semibold text-sm">¡Enlace copiado!</p>
-                                </div>
-                                <Share className="w-4" />
-                            </button>
-                            <div className="absolute w-4 bg-ab-500 h-12 left-0 top-0"></div>
-                        </div>
-                    </div>
-                    <div className="flex">
-                        <Link to="/home">
-                            <Logo className="h-12" />
-                        </Link>
-                        <button className={`${showRight ? "right-[28rem]" : "right-0"} xl:right-0 relative z-10 h-12 w-12 flex items-center justify-center bg-b-500 text-white font-bold transition-all`}
-                            onClick={() => setShowRight(show => !show)}
-                        >FAQ</button>
-                    </div>
-                </div>
+                <Header showLeft={showLeft} setShowLeft={setShowLeft} showRight={showRight} setShowRight={setShowRight} />
                 <div className="flex flex-col w-full pt-12 max-w-screen-md">
                     <Routes>
                         <Route path="/" element={(
@@ -107,7 +78,7 @@ export const Home = () => {
                                         ))
                                         :
                                         <p className="text-center text-lg">Aún no tienes chats, ¡Comparte tu link para comenzar!</p>
-                                    }
+                                }
                             </>
                         )} />
                         <Route path="/chat/:id" element={<ChatComplete />} />
