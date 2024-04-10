@@ -19,7 +19,7 @@ export const Landing = () => {
             <MobileAside className="h-full lg:hidden min-w-fit" />
             <div className="relative flex-1 md:left-0 z-10">
                 <h1 className="text-7xl md:text-8xl 2xl:text-[10rem] font-bold left-[-3.6rem] md:left-[-5.8rem] 2xl:left-[-9rem] relative">Qery.me</h1>
-                <div>
+                <div className="pl-2">
                     <p className="text-xl pr-12 md:text-2xl 2xl:text-4xl my-3 2xl:my-8 ">Conéctate con tus clientes al instante</p>
                     <button className="flex items-center justify-center bg-ab-500 text-white w-fit text-center font-bold p-2 md:p-4 md:px-12 text-lg md:text-xl 2xl:text-2xl"
                         onClick={login}
