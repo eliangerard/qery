@@ -21,7 +21,7 @@ export const VerifySession = () => {
         }
 
         const loadSession = async () => {
-            setLoadingSession(true);
+            setLoadingSession(user ? false : true);
             const token = localStorage.getItem('token');
             try {
                 const user = await fetch(`${server}/users`, {
@@ -42,7 +42,7 @@ export const VerifySession = () => {
     }, [pathname])
 
     return (
-        <> {!loadingSession &&
+        <> {!loadingSession && user &&
             <Routes>
                 <Route path='/*' element={<Home />} />
                 <Route path='/' element={user ? <Home /> : <Landing />} />
