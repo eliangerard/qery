@@ -1,10 +1,11 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { server } from "./util/server";
 import { v4 as uuidv4 } from 'uuid';
 import { socket } from "./util/socket";
 import { Share } from "../ui/Icons/Share";
 import UserContext from "../context/UserContext";
+import { Back } from "../ui/Icons/Back";
 
 export const ChatComplete = () => {
 
@@ -18,7 +19,7 @@ export const ChatComplete = () => {
 
 	useEffect(() => {
 		socket.on('new message', (message) => {
-			if (message.user == user._id) return;
+			if (message.user._id == user._id) return;
 			console.log("New message", message);
 			setConversation((conv) => {
 				console.log("Conversation", conv);
@@ -26,7 +27,12 @@ export const ChatComplete = () => {
 			})
 		});
 
-		fetch(`${server}/conversations/${id}`)
+		fetch(`${server}/conversations/${id}`, {
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('token')}`
+			}
+		})
 			.then(response => response.json())
 			.then(data => setConversation(data));
 
@@ -35,13 +41,35 @@ export const ChatComplete = () => {
 		}
 	}, []);
 
+	const handleMessageSend = () => {
+		const message = {
+			conversation: conversation.id,
+			id: uuidv4(),
+			user,
+			companyID: user._id,
+			content: newMessage.trim()
+		};
+
+		socket.emit('chat message', message, (error) => {
+			if (error) return console.log(error);
+			console.log("Message sent");
+		});
+
+		setNewMessage("");
+
+		return setConversation((conv) => ({ ...conv, messages: [...conv.messages, message] }));
+	}
+
 	return (
-        <>
-			<h2 className="text-5xl mt-12 font-bold mb-4 w-full">Chat con {id}</h2>
+		<>
+			<div className="flex mb-4 mt-12 items-center">
+				<Link to={"/"}><Back className={"h-6 mr-4"} /></Link>
+				<h2 className="text-5xl font-bold w-full">Chat con {conversation?.messages[conversation?.messages?.length - 1]?.user?.name}</h2>
+			</div>
 			<div className="flex flex-col-reverse grow mb-8 overflow-y-auto">
 				<div className="w-full h-fit flex flex-col items-end">
 					{conversation && conversation.messages.map((message, index) => (
-						message.user === user?._id ?
+						message.user._id === user?._id ?
 							<div key={index} className="flex justify-end w-full">
 								<div className="flex max-w-10/12 justify-between mb-2 hover:cursor-pointer">
 									<p className="bg-accent-500 flex-1 break-all text-pretty max-w-full items-center px-2 py-1">{message.content}</p>
@@ -67,44 +95,11 @@ export const ChatComplete = () => {
 					onChange={(e) => setNewMessage(e.target.value)}
 					placeholder="Envía un mensaje"
 					onKeyPress={(e) => {
-						if (e.key === 'Enter' && newMessage !== "") {
-							const message = {
-								conversation: conversation.id,
-								id: uuidv4(),
-								user: user.id,
-								content: newMessage.trim()
-							};
-
-							socket.emit('chat message', message, (error) => {
-								if (error) return console.log(error);
-								console.log("Message sent");
-							});
-
-							setNewMessage("");
-
-							return setConversation((conv) => ({ ...conv, messages: [...conv.messages, message] }));
-						}
+						if (e.key === 'Enter' && newMessage !== "") handleMessageSend();
 					}}
 				/>
 				<button className="bg-ab-500 w-12 h-12 flex items-center justify-center pr-0.5"
-					onClick={() => {
-						if (newMessage === "") return;
-
-						const message = {
-							conversation: conversation.id,
-							id: uuidv4(),
-							user: user._id,
-							content: newMessage.trim()
-						};
-						console.log("User", user);
-						console.log("Message", message);
-
-						socket.emit('chat message', message);
-
-						setNewMessage("");
-
-						return setConversation((conv) => ({ ...conv, messages: [...conv.messages, message] }));
-					}}
+					onClick={handleMessageSend}
 				><Share className={"w-4"} /></button>
 			</div>
 		</>
