@@ -9,7 +9,7 @@ function App() {
     <UserProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/user/:username" element={<Client/>}/>
+          <Route path="/company/:username" element={<Client/>}/>
           <Route path="/*" element={<VerifySession />} />
         </Routes>
       </BrowserRouter>
