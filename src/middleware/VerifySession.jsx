@@ -1,7 +1,7 @@
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom"
 import { Home, Landing } from "../pages"
 import Users from "../pages/admin/Users"
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import UserContext from "../context/UserContext"
 import { server } from "../pages/util/server"
 
@@ -12,13 +12,16 @@ export const VerifySession = () => {
     const { user, setUser } = useContext(UserContext);
     const { pathname } = useLocation();
 
+    const [loadingSession, setLoadingSession] = useState(false);
+
 
     useEffect(() => {
         if (!localStorage.getItem('token')) {
-            return navigate('/')
+            return;
         }
 
         const loadSession = async () => {
+            setLoadingSession(user ? false : true);
             const token = localStorage.getItem('token');
             try {
                 const user = await fetch(`${server}/users`, {
@@ -29,6 +32,7 @@ export const VerifySession = () => {
                 }).then(res => res.json()).then(res => res);
                 console.log(user);
                 setUser(user);
+                setLoadingSession(false);
             } catch (error) {
                 navigate('/')
             }
@@ -38,12 +42,13 @@ export const VerifySession = () => {
     }, [pathname])
 
     return (
-        <>
+        <> {!loadingSession && user &&
             <Routes>
                 <Route path='/*' element={<Home />} />
                 <Route path='/' element={user ? <Home /> : <Landing />} />
                 <Route path='/admin/users' element={<Users />} />
             </Routes>
+        }
         </>
     )
 }

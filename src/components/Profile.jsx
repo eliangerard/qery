@@ -28,8 +28,13 @@ export const Profile = ({ company, showLeft, setShowLeft }) => {
 
     return (
         <div ref={container} className={`absolute lg:static w-full lg:w-1/4 max-w-[28rem] min-w-16 overflow-hidden h-full bg-accent-500 left-0 ${showLeft ? "translate-x-0" : "translate-x-[-100%]"} lg:translate-x-0 z-50 transition-all`}>
-            <div className="flex items-center h-12">
+            <div className="flex items-center justify-between h-12">
                 <p className="text-lg px-2 font-semibold">Información de la empresa</p>
+                <button className={`flex relative z-30 lg:hidden items-center justify-center pt-0.5 w-12 h-12 text-xl bg-accent-500 font-bold text-accent-500 transition-all`}
+                    onClick={() => setShowLeft(show => !show)}
+                >
+                    <div className="rounded-full flex items-center justify-center bg-black text-sm h-6 w-6">i</div>
+                </button>
             </div>
             <img className="w-full h-1/2 object-cover" src={company ? company?.picture?.substring(0, company?.picture?.indexOf("=")) : user?.picture?.substring(0, user?.picture?.indexOf("="))} alt="" />
             <div className="relative p-2">

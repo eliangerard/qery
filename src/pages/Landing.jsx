@@ -6,13 +6,10 @@ import { GuyR } from "../ui/Icons/GuyR"
 import { useGoogleLogin } from "@react-oauth/google"
 
 export const Landing = () => {
-
-    const navigate = useNavigate();
-
     const login = useGoogleLogin({
         onSuccess: async tokenResponse => {
             localStorage.setItem('token', tokenResponse.access_token);
-            navigate('/');
+            window.location.reload();
         }
     });
 
