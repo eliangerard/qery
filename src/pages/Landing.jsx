@@ -1,14 +1,21 @@
-import { Link, useNavigate } from "react-router-dom"
 import { Aside, MobileAside } from "../ui/Icons/Aside"
 import { Messages, ResponsiveMessages } from "../ui/Icons/Messages"
 import { GuyL } from "../ui/Icons/GuyL"
 import { GuyR } from "../ui/Icons/GuyR"
 import { useGoogleLogin } from "@react-oauth/google"
+import { server } from "./util/server"
 
 export const Landing = () => {
     const login = useGoogleLogin({
-        onSuccess: async tokenResponse => {
-            localStorage.setItem('token', tokenResponse.access_token);
+        flow: 'auth-code',
+        onSuccess: async response => {
+            const { code } = response;
+
+            const res = await fetch(`${server}/auth/token?code=${code}`).then(res => res.json()).then(res => res);
+
+            localStorage.setItem('token', res.id_token);
+            localStorage.setItem('refresh', res.refresh_token);
+
             window.location.reload();
         }
     });
@@ -24,7 +31,7 @@ export const Landing = () => {
                     <button className="flex items-center justify-center bg-ab-500 text-white w-fit text-center font-bold p-2 md:p-4 md:px-12 text-lg md:text-xl 2xl:text-2xl"
                         onClick={login}
                     >
-                        <svg className="h-5 mr-2 md:h-7 md:mr-4" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg"> 
+                        <svg className="h-5 mr-2 md:h-7 md:mr-4" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg">
 
                             <title>google [#178]</title>
                             <desc>Created with Sketch.</desc>
