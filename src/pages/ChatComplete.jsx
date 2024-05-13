@@ -12,15 +12,14 @@ export const ChatComplete = () => {
 	const { id } = useParams();
 
 	const { user } = useContext(UserContext)
-	console.log("User", user);
 
 	const [conversation, setConversation] = useState({ messages: [] });
 	const [newMessage, setNewMessage] = useState("");
 
 	useEffect(() => {
 		socket.on('new message', (message) => {
-			if (message.user._id == user._id) return;
 			console.log("New message", message);
+			if (message.user.id == user._id) return;
 			setConversation((conv) => {
 				console.log("Conversation", conv);
 				return { ...conv, messages: [...conv.messages, message] }
@@ -38,6 +37,7 @@ export const ChatComplete = () => {
 
 		return () => {
 			socket.off('new message');
+			socket.off('new conversation');
 		}
 	}, []);
 
@@ -45,7 +45,9 @@ export const ChatComplete = () => {
 		const message = {
 			conversation: conversation.id,
 			id: uuidv4(),
-			user,
+			user: {
+				id: user._id,
+			},
 			companyID: user._id,
 			content: newMessage.trim()
 		};
@@ -69,7 +71,7 @@ export const ChatComplete = () => {
 			<div className="flex flex-col-reverse grow mb-8 overflow-y-auto">
 				<div className="w-full h-fit flex flex-col items-end">
 					{conversation && conversation.messages.map((message, index) => (
-						message.user._id === user?._id ?
+						message.user.id === user?._id ?
 							<div key={index} className="flex justify-end w-full">
 								<div className="flex max-w-10/12 justify-between mb-2 hover:cursor-pointer">
 									<p className="bg-accent-500 flex-1 break-all text-pretty max-w-full items-center px-2 py-1">{message.content}</p>

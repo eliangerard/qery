@@ -12,29 +12,49 @@ export const VerifySession = () => {
     const { user, setUser } = useContext(UserContext);
     const { pathname } = useLocation();
 
-    const [loadingSession, setLoadingSession] = useState(false);
+    const [loadingSession, setLoadingSession] = useState(true);
 
 
     useEffect(() => {
         if (!localStorage.getItem('token')) {
-            return;
+            return setLoadingSession(false);
         }
 
         const loadSession = async () => {
             setLoadingSession(user ? false : true);
             const token = localStorage.getItem('token');
             try {
-                const user = await fetch(`${server}/users`, {
+                const res = await fetch(`${server}/users`, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${token}`,
                     }
-                }).then(res => res.json()).then(res => res);
-                console.log(user);
+                });
+                if (res.status === 401) {
+                    console.log("Unauthroized");
+                    throw new Error('Unauthorized');
+                }
+                const user = await res.json();
                 setUser(user);
                 setLoadingSession(false);
             } catch (error) {
-                navigate('/')
+                const refresh = await fetch(`${server}/auth/refresh`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('refresh')}`,
+                    }
+                })
+
+                if (refresh.status === 401) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('refresh');
+                }
+
+                if (refresh.status === 200) {
+                    const data = await refresh.json();
+                    localStorage.setItem('token', data.id_token);
+                }
+                window.location.reload();
             }
         }
 
@@ -42,7 +62,7 @@ export const VerifySession = () => {
     }, [pathname])
 
     return (
-        <> { ((!loadingSession && user ) || (!localStorage.getItem("token") && !user)) &&
+        <> {!loadingSession &&
             <Routes>
                 <Route path='/*' element={<Home />} />
                 <Route path='/' element={user ? <Home /> : <Landing />} />
