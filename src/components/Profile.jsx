@@ -25,7 +25,7 @@ export const Profile = ({ company, showLeft, setShowLeft }) => {
     }, [container, setShowLeft]);
 
     return (
-        <div ref={container} className={`absolute lg:static w-full lg:w-[50vh] max-w-[28rem] min-w-16 overflow-hidden h-full bg-accent-500 left-0 ${showLeft ? "translate-x-0" : "translate-x-[-100%]"} lg:translate-x-0 z-50 transition-all`}>
+        <div ref={container} className={`absolute lg:static w-full lg:w-[50vh] max-w-[50vh] min-w-16 overflow-hidden h-full bg-accent-500 left-0 ${showLeft ? "translate-x-0" : "translate-x-[-100%]"} lg:translate-x-0 z-50 transition-all`}>
             <div className="flex items-center justify-between h-12">
                 <p className="text-lg px-2 font-semibold">Información de la empresa</p>
                 <button className={`flex relative z-30 lg:hidden items-center justify-center pt-0.5 w-12 h-12 text-xl bg-accent-500 font-bold text-accent-500 transition-all`}

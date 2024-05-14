@@ -19,7 +19,7 @@ export const FAQs = ({ clientSide, showRight, setShowRight }) => {
 
     return (
 
-        <div ref={container} className={`absolute xl:static right-0 ${showRight ? "translate-x-0" : "translate-x-[100%] w-0 px-0 w-full"} overflow-hidden xl:translate-x-0 xl:w-[50vh] max-w-[28rem] z-50 h-full bg-b-500 transition-all`}>
+        <div ref={container} className={`absolute xl:static right-0 ${showRight ? "translate-x-0" : "translate-x-[100%] w-0 px-0 w-full"} overflow-hidden xl:translate-x-0 xl:w-[50vh] max-w-[50vh] z-50 h-full bg-b-500 transition-all`}>
             <div className="relative px-4 py-8">
                 <button className={`left-0 top-0 absolute xl:hidden z-10 h-12 w-12 flex items-center justify-center bg-b-500 text-white font-bold transition-all`}
                     onClick={() => setShowRight(show => !show)}
