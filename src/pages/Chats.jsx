@@ -58,7 +58,7 @@ export const Chats = () => {
             {
                 conversations.length ?
                     conversations.map((chat) => (
-                        <Chat key={chat.id} {...chat} lastMessage={chat.messages[chat.messages.length - 1]} newMessages={chat.messages.length} />
+                        <Chat key={chat.id} {...chat} user={chat?.user?.name} lastMessage={chat.messages[chat.messages.length - 1]} newMessages={chat.messages.length} />
                     ))
                     :
                     <p className="text-center text-lg">Aún no tienes chats, ¡Comparte tu link para comenzar!</p>
