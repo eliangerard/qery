@@ -9,6 +9,7 @@ import { socket } from "../util/socket";
 import { Header } from "../../ui/Header";
 
 import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-generator';
+import { Message } from "../../components/Message";
 
 const customConfig = {
     dictionaries: [adjectives, colors],
@@ -83,26 +84,15 @@ export const Client = () => {
             <Profile company={company} showLeft={showLeft} setShowLeft={setShowLeft} />
             <div className="relative flex flex-col justify-between flex-1 h-full col-span-2 bg-w-500 px-4 md:px-12 py-8 transition-all">
                 <Header showLeft={showLeft} setShowLeft={setShowLeft} showRight={showRight} setShowRight={setShowRight} />
-                <div className="mt-12 mb-4 text-center">
+                <div className="mt-6 mb-4 text-center">
                     {/* <p className="text-lg font-semibold mb-4">¡Hola <input type="text" value={user.name} className="w-4 min-w-fit border-b-2 border-black" />!</p> */}
-                    <h2 className="text-5xl font-bold select-none">Chatea con {company?.companyName}</h2>
+                    <h2 className="text-3xl text-center  md:text-5xl font-bold select-none">Chatea con {company?.companyName}</h2>
                 </div>
                 {conversation.messages.length > 0 ?
-                    <div className="flex flex-col-reverse grow mb-8 overflow-y-auto">
+                    <div className="flex flex-col-reverse grow py-8 overflow-y-auto">
                         <div className="w-full h-fit flex flex-col items-end">
                             {conversation.messages.map((message, index) => (
-                                user.id == message.user.id ?
-                                    <div key={index} className="flex justify-end w-full">
-                                        <div className="flex max-w-10/12 justify-between mb-2 hover:cursor-pointer">
-                                            <p className="bg-accent-500 flex-1 break-all text-pretty max-w-full items-center px-2 py-1">{message.content}</p>
-                                        </div>
-                                    </div>
-                                    :
-                                    <div key={index} className="flex justify-start w-full h-fit">
-                                        <div className="flex max-w-10/12 justify-between mb-2 hover:cursor-pointer">
-                                            <p className="bg-b-500 text-white max-w-full flex-1 items-center px-2 py-1">{message.content}</p>
-                                        </div>
-                                    </div>
+                                <Message key={index} {...message} mine={user.id == message.user.id} />
                             ))
 
                             }

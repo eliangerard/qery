@@ -6,6 +6,7 @@ import { socket } from "./util/socket";
 import { Share } from "../ui/Icons/Share";
 import UserContext from "../context/UserContext";
 import { Back } from "../ui/Icons/Back";
+import { Message } from "../components/Message";
 
 export const ChatComplete = () => {
 
@@ -64,25 +65,14 @@ export const ChatComplete = () => {
 
 	return (
 		<>
-			<div className="flex mb-4 mt-12 items-center">
+			<div className="flex mb-4 items-center">
 				<Link to={"/"}><Back className={"h-6 mr-4"} /></Link>
-				<h2 className="text-5xl font-bold w-full">Chat con {conversation?.messages[conversation?.messages?.length - 1]?.user?.name}</h2>
+				<h2 className="text-3xl text-center  md:text-5xl font-bold w-full">Chat con {conversation?.user?.name}</h2>
 			</div>
-			<div className="flex flex-col-reverse grow mb-8 overflow-y-auto">
+			<div className="flex flex-col-reverse grow py-8 overflow-y-auto">
 				<div className="w-full h-fit flex flex-col items-end">
 					{conversation && conversation.messages.map((message, index) => (
-						message.user.id === user?._id ?
-							<div key={index} className="flex justify-end w-full">
-								<div className="flex max-w-10/12 justify-between mb-2 hover:cursor-pointer">
-									<p className="bg-accent-500 flex-1 break-all text-pretty max-w-full items-center px-2 py-1">{message.content}</p>
-								</div>
-							</div>
-							:
-							<div key={index} className="flex justify-start w-full h-fit">
-								<div className="flex max-w-10/12 justify-between mb-2 hover:cursor-pointer">
-									<p className="bg-b-500 text-white max-w-full flex-1 items-center px-2 py-1">{message.content}</p>
-								</div>
-							</div>
+						<Message key={index} {...message} mine={message.user.id === user?._id} />
 					))}
 				</div>
 			</div>
