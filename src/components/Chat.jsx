@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 
-export const Chat = ({ id, user, lastMessage, newMessages }) => {
+export const Chat = ({ _id: id, user, lastMessage, newMessages }) => {
     return (
         <Link to={`/chat/${id}`} className="w-full">
             <div className="flex w-full justify-between mb-2 hover:cursor-pointer">
