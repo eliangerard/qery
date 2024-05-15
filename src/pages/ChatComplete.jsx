@@ -43,6 +43,9 @@ export const ChatComplete = () => {
 	}, []);
 
 	const handleMessageSend = () => {
+
+		if(newMessage.trim() === "") return;
+
 		const message = {
 			conversation: conversation.id,
 			id: uuidv4(),

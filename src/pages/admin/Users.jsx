@@ -10,7 +10,7 @@ const Users = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetch(server + "users/all")
+    fetch(server + "/users/all")
       .then((res) => res.json())
       .then((res) => {
         setUsers(res);
