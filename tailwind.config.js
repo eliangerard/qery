@@ -10,6 +10,9 @@ export default {
     },
     extend: {
       colors : {
+        'green' : {
+          500 : '#02B576'
+        },
         'azul' : {
           100 : '#80E9FF',
           200 : '#00D4FF',
