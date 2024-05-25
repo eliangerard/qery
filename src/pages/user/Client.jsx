@@ -29,7 +29,6 @@ export const Client = () => {
 
     const [newMessage, setNewMessage] = useState("");
     const [conversation, setConversation] = useState({
-        id: uuidv4(),
         messages: []
     });
 
@@ -44,6 +43,10 @@ export const Client = () => {
     useEffect(() => {
         socket.on('connect', () => console.log("Connected to server"));
         socket.on('disconnect', () => console.log("Disconnected from server"));
+        socket.on('new conversation', (conversation) => {
+            console.log("New conversation", conversation);
+            setConversation(conversation);
+        });
 
         socket.on('new message', (message) => {
             console.log("Message received", message);
@@ -55,6 +58,7 @@ export const Client = () => {
             socket.off('connect');
             socket.off('disconnect');
             socket.off('new message');
+            socket.off('new conversation');
         }
     }, [])
 
@@ -62,7 +66,7 @@ export const Client = () => {
         if (newMessage === "") return;
 
         const message = {
-            conversation: conversation.id,
+            conversation: conversation._id,
             id: uuidv4(),
             user,
             companyID: company._id,

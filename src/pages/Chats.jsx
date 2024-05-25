@@ -17,7 +17,7 @@ export const Chats = () => {
         socket.on('new conversation', (conversation) => {
             console.log("New conversation", conversation);
             setConversations((conv) => [...conv, conversation]);
-            socket.emit('join conversation', conversation.id);
+            socket.emit('join conversation', conversation._id);
         });
         socket.on('new message', (message) => {
             console.log("New message", message);
@@ -25,7 +25,7 @@ export const Chats = () => {
                 console.log("Conversation", conv);
 
                 return conv.map((chat) => {
-                    if (chat.id === message.conversation) {
+                    if (chat._id === message.conversation) {
                         return { ...chat, messages: [...chat.messages, message] }
                     }
                     return chat;
@@ -43,7 +43,7 @@ export const Chats = () => {
             console.log("Conversations", res);
             setConversations(res)
             res.map((chat) => {
-                socket.emit('join conversation', chat.id);
+                socket.emit('join conversation', chat._id);
             });
         });
 

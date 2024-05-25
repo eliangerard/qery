@@ -47,7 +47,7 @@ export const ChatComplete = () => {
 		if(newMessage.trim() === "") return;
 
 		const message = {
-			conversation: conversation.id,
+			conversation: conversation._id,
 			id: uuidv4(),
 			user: {
 				id: user._id,
