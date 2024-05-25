@@ -3,8 +3,9 @@ import { Share } from "./Icons/Share";
 import { Link } from "react-router-dom";
 import { Logo } from "./Icons/Logo";
 import UserContext from "../context/UserContext";
+import { Mas } from "./Icons/Mas";
 
-export const Header = ({showLeft, setShowLeft, showRight, setShowRight}) => {
+export const Header = ({ showLeft, setShowLeft, showRight, setShowRight }) => {
 
     const { user } = useContext(UserContext);
 
@@ -39,6 +40,9 @@ export const Header = ({showLeft, setShowLeft, showRight, setShowRight}) => {
             <div className="flex">
                 <Link to="/">
                     <Logo className="h-12" />
+                </Link>
+                <Link to="/mas">
+                    <Mas className="h-12 fill-green-500" />
                 </Link>
                 <button className={`${showRight ? "right-[28rem]" : "right-0"} xl:hidden z-10 h-12 w-12 flex items-center justify-center bg-b-500 text-white font-bold transition-all`}
                     onClick={() => setShowRight(show => !show)}
