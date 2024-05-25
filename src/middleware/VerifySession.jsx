@@ -4,6 +4,7 @@ import Users from "../pages/admin/Users"
 import { useContext, useEffect, useState } from "react"
 import UserContext from "../context/UserContext"
 import { server } from "../pages/util/server"
+import { Subscribe } from "../pages/Subscribe"
 
 export const VerifySession = () => {
 
@@ -64,6 +65,7 @@ export const VerifySession = () => {
     return (
         <> {!loadingSession &&
             <Routes>
+                <Route path='/mas/*' element={<Subscribe />} />
                 <Route path='/*' element={<Home />} />
                 <Route path='/' element={user ? <Home /> : <Landing />} />
                 <Route path='/admin/users' element={<Users />} />
