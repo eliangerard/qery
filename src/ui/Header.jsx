@@ -12,7 +12,7 @@ export const Header = ({ showLeft, setShowLeft, showRight, setShowRight }) => {
     const [showCopied, setShowCopied] = useState(false);
 
     return (
-        <div className="flex absolute top-0 left-0 w-full justify-between">
+        <div className="flex absolute top-0 left-0 w-full justify-between z-50">
             <div className="flex relative">
                 <button className={`flex relative z-30 lg:hidden items-center justify-center pt-0.5 w-12 h-12 text-xl bg-accent-500 font-bold text-accent-500 transition-all`}
                     onClick={() => setShowLeft(show => !show)}
