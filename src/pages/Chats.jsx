@@ -53,15 +53,15 @@ export const Chats = () => {
     }, [pathname])
     return (
         <>
-            {(conversations.length ?
+            {(conversations.length > 0 ?
                 <>
                     {
-                        conversations.filter((chat) => chat.translatedMessages[chat.translatedMessages.length - 1].user?.name).reverse().map((chat) => (
+                        conversations.filter((chat) => chat.translatedMessages[chat.translatedMessages.length - 1]?.user?.name).reverse().map((chat) => (
                             <Chat key={chat._id} {...chat} user={chat?.user?.name} lastMessage={chat.translatedMessages[chat.translatedMessages.length - 1]} newMessages={chat.translatedMessages.length} />
                         ))
                     }
                     {
-                        conversations.filter((chat) => !chat.translatedMessages[chat.translatedMessages.length - 1].user?.name).reverse().reverse().map((chat) => (
+                        conversations.filter((chat) => !chat.translatedMessages[chat.translatedMessages.length - 1]?.user?.name).reverse().reverse().map((chat) => (
                             <Chat key={chat._id} {...chat} user={chat?.user?.name} lastMessage={chat.translatedMessages[chat.translatedMessages.length - 1]} newMessages={chat.translatedMessages.length} />
                         ))
                     }
