@@ -1,14 +1,17 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Profile } from "../components/Profile";
 import { FAQs } from "../components/FAQs";
 import { ChatComplete } from "./ChatComplete";
 import { Header } from "../ui/Header";
 import { Chats } from "./Chats";
+import UserContext from "../context/UserContext";
+import { Company } from "./Company";
 
 export const Home = () => {
 
 
+    const {user} = useContext(UserContext);
     const [showLeft, setShowLeft] = useState(false);
     const [showRight, setShowRight] = useState(false);
 
@@ -19,9 +22,9 @@ export const Home = () => {
                 <Header showLeft={showLeft} setShowLeft={setShowLeft} showRight={showRight} setShowRight={setShowRight} />
                 <div className="flex flex-col w-full pt-6 max-w-screen">
                     <Routes>
-                        <Route path="/" element={<Chats />} />
+                        <Route path={`/${user._id}/*`} element={<Company />} />
                         <Route path="/chat/:id" element={<ChatComplete />} />
-                        <Route path="/*" element={<Navigate to={"/"} />} />
+                        <Route path="/*" element={<Navigate to={`/${user._id}`} />} />
                     </Routes>
                 </div>
             </div>

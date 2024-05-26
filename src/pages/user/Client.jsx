@@ -7,9 +7,10 @@ import { Profile } from "../../components/Profile";
 import { FAQs } from "../../components/FAQs";
 import { socket } from "../util/socket";
 import { Header } from "../../ui/Header";
-
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-generator';
 import { Message } from "../../components/Message";
+import 'regenerator-runtime/runtime'
 
 const customConfig = {
     dictionaries: [adjectives, colors],
@@ -21,7 +22,7 @@ const customConfig = {
 export const Client = () => {
 
     const { username } = useParams();
-    const [user, setUser] = useState({ id: uuidv4(), name: uniqueNamesGenerator(customConfig) });
+    const [user, setUser] = useState({ id: uuidv4(), name: uniqueNamesGenerator(customConfig), role: "client" });
     const [company, setCompany] = useState({});
 
     const [showLeft, setShowLeft] = useState(false);
@@ -29,8 +30,23 @@ export const Client = () => {
 
     const [newMessage, setNewMessage] = useState("");
     const [conversation, setConversation] = useState({
-        messages: []
+        originalMessages: [],
+        translatedMessages: []
     });
+
+    const {
+        transcript,
+        listening,
+        resetTranscript,
+        browserSupportsSpeechRecognition
+    } = useSpeechRecognition();
+
+    useEffect(() => {
+        if (!listening && transcript !== "") {
+            setNewMessage(transcript)
+            resetTranscript();
+        }
+    }, [listening])
 
     useEffect(() => {
         const loadUser = async () => {
@@ -48,10 +64,11 @@ export const Client = () => {
             setConversation(conversation);
         });
 
-        socket.on('new message', (message) => {
+        socket.on('new message', (recievedMessage) => {
+            const message = recievedMessage.originalMessage.user.role === 'company' ? recievedMessage.translatedMessage : recievedMessage.originalMessage;
             console.log("Message received", message);
             if (message.user.id == user.id) return;
-            setConversation((conv) => ({ ...conv, messages: [...conv.messages, message] }));
+            setConversation((conv) => ({ ...conv, originalMessages: [...conv.originalMessages, message] }));
         });
 
         return () => {
@@ -70,7 +87,8 @@ export const Client = () => {
             id: uuidv4(),
             user,
             companyID: company._id,
-            content: newMessage.trim()
+            content: newMessage.trim(),
+            date: new Date()
         };
 
         socket.emit('chat message', message, (error) => {
@@ -80,7 +98,7 @@ export const Client = () => {
 
         setNewMessage("");
 
-        return setConversation((conv) => ({ ...conv, messages: [...conv.messages, message] }));
+        return setConversation((conv) => ({ ...conv, originalMessages: [...conv.originalMessages, message] }));
     }
 
     return (
@@ -88,14 +106,15 @@ export const Client = () => {
             <Profile company={company} showLeft={showLeft} setShowLeft={setShowLeft} />
             <div className="relative flex flex-col justify-between flex-1 h-full col-span-2 bg-w-500 px-4 md:px-12 py-8 transition-all">
                 <Header showLeft={showLeft} setShowLeft={setShowLeft} showRight={showRight} setShowRight={setShowRight} />
-                <div className="mt-6 mb-4 text-center">
+                <div className="mt-6 mb-4 text-left">
                     {/* <p className="text-lg font-semibold mb-4">¡Hola <input type="text" value={user.name} className="w-4 min-w-fit border-b-2 border-black" />!</p> */}
-                    <h2 className="text-3xl text-center  md:text-5xl font-bold select-none">Chatea con {company?.companyName}</h2>
+                    <p>Chatea con</p>
+                    <p className="text-3xl md:text-4xl font-bold">{company?.companyName}</p>
                 </div>
-                {conversation.messages.length > 0 ?
+                {conversation.originalMessages.length > 0 ?
                     <div className="flex flex-col-reverse grow py-8 overflow-y-auto">
                         <div className="w-full h-fit flex flex-col items-end">
-                            {conversation.messages.map((message, index) => (
+                            {conversation.originalMessages.map((message, index) => (
                                 <Message key={index} {...message} mine={user.id == message.user.id} />
                             ))
 
@@ -118,6 +137,9 @@ export const Client = () => {
                             if (e.key === 'Enter' && newMessage !== "") handleSendMessage();
                         }}
                     />
+                    <button className="px-2 bg-accent-500" onClick={SpeechRecognition.startListening}>
+                        <img className={`h-5 ${listening ? 'animate-ping' : ''}`} src="/mic.svg" alt="" />
+                    </button>
                     <button className="bg-ab-500 w-12 h-12 flex items-center justify-center pr-0.5"
                         onClick={handleSendMessage}
                     ><Share className={"w-4"} /></button>

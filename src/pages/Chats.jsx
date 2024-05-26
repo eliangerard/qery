@@ -6,27 +6,26 @@ import { server } from "./util/server";
 import { Chat } from "../components/Chat";
 
 export const Chats = () => {
-
     const { user } = useContext(UserContext);
     const { pathname } = useLocation();
     const [conversations, setConversations] = useState([]);
 
     useEffect(() => {
-        console.log("haciendo eso q quieres");
         socket.emit('company', user);
         socket.on('new conversation', (conversation) => {
             console.log("New conversation", conversation);
             setConversations((conv) => [...conv, conversation]);
             socket.emit('join conversation', conversation._id);
         });
-        socket.on('new message', (message) => {
+        socket.on('new message', (recievedMessage) => {
+            const message = recievedMessage.originalMessage.user.role === 'client' ? recievedMessage.translatedMessage : recievedMessage.originalMessage;
             console.log("New message", message);
             setConversations((conv) => {
                 console.log("Conversation", conv);
 
                 return conv.map((chat) => {
                     if (chat._id === message.conversation) {
-                        return { ...chat, messages: [...chat.messages, message] }
+                        return { ...chat, translatedMessages: [...chat.translatedMessages, message] }
                     }
                     return chat;
 
@@ -54,15 +53,22 @@ export const Chats = () => {
     }, [pathname])
     return (
         <>
-            <h2 className="text-5xl font-bold mb-4 text-center">Tus Chats</h2>
-            {
-                conversations.length ?
-                    conversations.map((chat) => (
-                        <Chat key={chat.id} {...chat} user={chat?.user?.name} lastMessage={chat.messages[chat.messages.length - 1]} newMessages={chat.messages.length} />
-                    ))
-                    :
-                    <p className="text-center text-lg">Aún no tienes chats, ¡Comparte tu link para comenzar!</p>
-            }
+            {(conversations.length ?
+                <>
+                    {
+                        conversations.filter((chat) => chat.translatedMessages[chat.translatedMessages.length - 1].user?.name).reverse().map((chat) => (
+                            <Chat key={chat._id} {...chat} user={chat?.user?.name} lastMessage={chat.translatedMessages[chat.translatedMessages.length - 1]} newMessages={chat.translatedMessages.length} />
+                        ))
+                    }
+                    {
+                        conversations.filter((chat) => !chat.translatedMessages[chat.translatedMessages.length - 1].user?.name).reverse().reverse().map((chat) => (
+                            <Chat key={chat._id} {...chat} user={chat?.user?.name} lastMessage={chat.translatedMessages[chat.translatedMessages.length - 1]} newMessages={chat.translatedMessages.length} />
+                        ))
+                    }
+
+                </>
+                :
+                <p className="text-center text-lg">Aún no tienes chats, ¡Comparte tu link para comenzar!</p>)}
         </>
     )
 }
