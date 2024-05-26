@@ -7,6 +7,8 @@ import { Share } from "../ui/Icons/Share";
 import UserContext from "../context/UserContext";
 import { Back } from "../ui/Icons/Back";
 import { Message } from "../components/Message";
+import 'regenerator-runtime/runtime'
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 export const ChatComplete = () => {
 
@@ -14,16 +16,43 @@ export const ChatComplete = () => {
 
 	const { user } = useContext(UserContext)
 
-	const [conversation, setConversation] = useState({ messages: [] });
+	const [conversation, setConversation] = useState({ translatedMessages: [], originalMessages: [] });
 	const [newMessage, setNewMessage] = useState("");
 
+	const {
+		transcript,
+		listening,
+		resetTranscript,
+		browserSupportsSpeechRecognition
+	} = useSpeechRecognition();
+
 	useEffect(() => {
-		socket.on('new message', (message) => {
+		if (!listening && transcript !== "") {
+			setNewMessage(transcript)
+			resetTranscript();
+		}
+	}, [listening])
+
+	useEffect(() => {
+		socket.emit('present', conversation._id);
+
+		window.onbeforeunload = () => {
+			socket.emit('absent', conversation._id);
+		}
+
+		return () => {
+			socket.emit('absent', conversation._id);
+		}
+	}, [conversation._id])
+
+	useEffect(() => {
+		socket.on('new message', (recievedMessage) => {
+			const message = recievedMessage.originalMessage.user.role === 'client' ? recievedMessage.translatedMessage : recievedMessage.originalMessage;
 			console.log("New message", message);
-			if (message.user.id == user._id) return;
+			if (!message.user.ai && message.user.id == user._id) return;
 			setConversation((conv) => {
 				console.log("Conversation", conv);
-				return { ...conv, messages: [...conv.messages, message] }
+				return { ...conv, translatedMessages: [...conv.translatedMessages, message] }
 			})
 		});
 
@@ -44,16 +73,18 @@ export const ChatComplete = () => {
 
 	const handleMessageSend = () => {
 
-		if(newMessage.trim() === "") return;
+		if (newMessage.trim() === "") return;
 
 		const message = {
 			conversation: conversation._id,
 			id: uuidv4(),
 			user: {
 				id: user._id,
+				role: 'company'
 			},
 			companyID: user._id,
-			content: newMessage.trim()
+			content: newMessage.trim(),
+			date: new Date()
 		};
 
 		socket.emit('chat message', message, (error) => {
@@ -61,21 +92,27 @@ export const ChatComplete = () => {
 			console.log("Message sent");
 		});
 
+		resetTranscript();
 		setNewMessage("");
 
-		return setConversation((conv) => ({ ...conv, messages: [...conv.messages, message] }));
+		return setConversation((conv) => ({ ...conv, translatedMessages: [...conv.translatedMessages, message] }));
 	}
 
 	return (
 		<>
-			<div className="flex mb-4 items-center">
-				<Link to={"/"}><Back className={"h-6 mr-4"} /></Link>
-				<h2 className="text-3xl text-center  md:text-5xl font-bold w-full">Chat con {conversation?.user?.name}</h2>
+			<div className="mb-2 items-center justify-left">
+				<h2 className="mr-10 font-medium mb-2 w-full">Chat con</h2>
+				<div className="flex items-center">
+					<Link to={"/"}><Back className={"h-6 mr-4"} /></Link>
+					<p className="text-3xl md:text-4xl font-bold">{conversation?.user?.name}</p>
+				</div>
+				<div className="w-10"></div>
 			</div>
+			{user.subscribed && <p className="text-left">Mientras tengas este chat abierto, las respuestas automáticas estarán deshabilitadas.</p>}
 			<div className="flex flex-col-reverse grow py-8 overflow-y-auto">
 				<div className="w-full h-fit flex flex-col items-end">
-					{conversation && conversation.messages.map((message, index) => (
-						<Message key={index} {...message} mine={message.user.id === user?._id} />
+					{conversation && conversation.translatedMessages.map((message, index) => (
+						<Message key={index} {...message} mine={message.user.id === user?._id} ai={message.user.ai} />
 					))}
 				</div>
 			</div>
@@ -93,6 +130,9 @@ export const ChatComplete = () => {
 						if (e.key === 'Enter' && newMessage !== "") handleMessageSend();
 					}}
 				/>
+				<button className="px-2 bg-accent-500" onClick={SpeechRecognition.startListening}>
+					<img className={`h-5 ${listening ? 'animate-ping' : ''}`} src="/mic.svg" alt="" />
+				</button>
 				<button className="bg-ab-500 w-12 h-12 flex items-center justify-center pr-0.5"
 					onClick={handleMessageSend}
 				><Share className={"w-4"} /></button>
