@@ -33,7 +33,7 @@ export default {
           500: '#FF0548'
         },
         'accent' : {
-          500 : '#F5B000'
+          500 : '#FCBC1A'
         }
       }
     },
