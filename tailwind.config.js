@@ -5,10 +5,14 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    
     fontFamily : {
       'sans' : ['Prompt', 'sans-serif']
     },
     extend: {
+      screens: {
+        'xl' : '1366px'
+      },
       colors : {
         'green' : {
           500 : '#02B576'
@@ -34,6 +38,9 @@ export default {
         },
         'accent' : {
           500 : '#FCBC1A'
+        },
+        'stripe' : {
+          500 : '#635BFF'
         }
       }
     },
