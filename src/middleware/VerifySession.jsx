@@ -66,8 +66,7 @@ export const VerifySession = () => {
         <> {!loadingSession &&
             <Routes>
                 <Route path='/mas/*' element={<Subscribe />} />
-                <Route path='/*' element={<Home />} />
-                <Route path='/' element={user ? <Home /> : <Landing />} />
+                <Route path='/*' element={user ? <Home /> : <Landing />} />
                 <Route path='/admin/users' element={<Users />} />
             </Routes>
         }
