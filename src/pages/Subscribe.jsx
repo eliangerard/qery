@@ -15,9 +15,9 @@ export const Subscribe = () => {
 
     return (
         <div className="relative h-full">
-            {user && <Header />}
+            {user && <Header company={user} />}
             <div className="w-full h-full flex items-center justify-center">
-                <div className="flex flex-col items-center justify-center max-w-screen-lg z-20">
+                <div className="flex flex-col items-center justify-center w-full max-w-screen-sm z-20">
                     <Routes>
                         <Route path="/" element={<Home/>} />
                         <Route path="/success" element={<Success/>} />
