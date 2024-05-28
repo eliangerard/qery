@@ -1,24 +1,32 @@
 import { useContext, useState } from "react";
 import { Share } from "./Icons/Share";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Logo } from "./Icons/Logo";
 import UserContext from "../context/UserContext";
 import { Mas } from "./Icons/Mas";
 
-export const Header = ({ showLeft, setShowLeft, showRight, setShowRight }) => {
+export const Header = ({ company, showLeft, setShowLeft, showRight, setShowRight }) => {
 
     const { user } = useContext(UserContext);
+    console.log(company);
+
+    const { pathname } = useLocation();
+    console.log(pathname, pathname.includes('company'));
 
     const [showCopied, setShowCopied] = useState(false);
 
     return (
-        <div className="flex absolute top-0 left-0 w-full justify-between z-50">
+        <div className="flex absolute top-0 left-0 w-full justify-between z-10">
             <div className="flex relative">
-                <button className={`flex relative z-30 lg:hidden items-center justify-center pt-0.5 w-12 h-12 text-xl bg-accent-500 font-bold text-accent-500 transition-all`}
+                <button className={`flex relative z-30 lg:hidden items-center justify-center pt-0.5 px-2 h-12 text-xl bg-accent-500 font-bold text-accent-500 transition-all`}
                     onClick={() => setShowLeft(show => !show)}
                 >
                     <div className="rounded-full flex items-center justify-center bg-black text-sm h-6 w-6">i</div>
+                    <p className="text-black px-4">{company?.companyName}</p>
                 </button>
+                <Link to={`${pathname.includes('company') ? '/company' : ''}/${company._id}/products`} className="bg-green-500 w-12 flex items-center justify-center">
+                    <img className="w-5" src="/store.svg" alt="" />
+                </Link>
                 <div className="relative flex h-12">
                     <button className="relative bg-ab-500 w-12 h-12 flex items-center justify-center pr-1 pt-1 rounded-r-full hover:translate-x-[0.5rem] active:translate-x-[0.2rem] transition-all duration-75 z-10"
                         onClick={() => {
@@ -38,7 +46,7 @@ export const Header = ({ showLeft, setShowLeft, showRight, setShowRight }) => {
                 </div>
             </div>
             <div className="flex">
-                <Link to="/">
+                <Link to={`${pathname.includes('company') ? `/company/${company._id}` : ''}/`}>
                     <Logo className="h-12" />
                 </Link>
                 <Link to="/mas">

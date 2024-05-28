@@ -19,8 +19,8 @@ export const Home = () => {
         <div className="relative flex w-full h-full relative overflow-hidden">
             <Profile showLeft={showLeft} setShowLeft={setShowLeft} />
             <div className="relative flex justify-center flex-1 h-full max-w-screen overflow-hidden col-span-2 bg-w-500 px-4 md:px-12 py-8 transition-all">
-                <Header showLeft={showLeft} setShowLeft={setShowLeft} showRight={showRight} setShowRight={setShowRight} />
-                <div className="flex flex-col w-full pt-6 max-w-screen">
+                <Header company={user} showLeft={showLeft} setShowLeft={setShowLeft} showRight={showRight} setShowRight={setShowRight} />
+                <div className="flex flex-col w-full max-w-screen">
                     <Routes>
                         <Route path={`/${user._id}/*`} element={<Company />} />
                         <Route path="/chat/:id" element={<ChatComplete />} />

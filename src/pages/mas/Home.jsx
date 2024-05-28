@@ -3,6 +3,7 @@ import UserContext from "../../context/UserContext";
 import { Union } from "../../ui/Icons/Union"
 import { useNavigate } from "react-router-dom";
 import { server } from "../util/server";
+import { Settings } from "./Settings";
 
 export const Home = () => {
 
@@ -13,6 +14,7 @@ export const Home = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        if(!user) return;
         fetch(`${server}/users/subscribed/`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
             .then(res => {
                 if (res.status === 401) {
@@ -50,9 +52,9 @@ export const Home = () => {
     return (
         <>
             {
-                user && user.subscribed ?
+                (user && user.subscribed) ?
                     <>
-                        <h2 className="text-7xl font-bold text-center text-green-500">¡Gracias por apoyar el proyecto!</h2>
+                        <Settings />
                     </>
                     :
                     <>

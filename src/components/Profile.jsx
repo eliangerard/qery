@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Edit } from "../ui/Icons/Edit";
 import UserContext from "../context/UserContext";
 import { server } from "../pages/util/server";
+import { SquareLoader } from "react-spinners";
 
 export const Profile = ({ company, showLeft, setShowLeft }) => {
 
@@ -36,12 +37,17 @@ export const Profile = ({ company, showLeft, setShowLeft }) => {
                     <div className="rounded-full flex items-center justify-center bg-black text-sm h-6 w-6">i</div>
                 </button>
             </div>
-            <img className="w-full h-1/2 object-cover" src={company ? company.picture : editableUser.picture.startsWith('http') ? editableUser.picture?.substring(0, editableUser?.picture?.indexOf("=")) : editableUser.picture} alt=""
-                onClick={() => {
-                    if (!edit) return;
-                    imageInput.current.click()
-                }}
-            />
+            <div className="w-full h-1/2 object-cover flex items-center justify-center relative">
+                <div className="absolute">
+                    <SquareLoader color="#000"/>
+                </div>
+                <img className="absolute z-10 w-full h-full object-cover" src={company ? company.picture : editableUser.picture.startsWith('http') ? editableUser.picture?.substring(0, editableUser?.picture?.indexOf("=")) : editableUser.picture} alt=""
+                    onClick={() => {
+                        if (!edit) return;
+                        imageInput.current.click()
+                    }}
+                />
+            </div>
             <input ref={imageInput} type="file" accept="image/*" className="hidden"
                 onChange={(e) => {
                     const file = e.target.files[0];
@@ -83,7 +89,7 @@ export const Profile = ({ company, showLeft, setShowLeft }) => {
                     disabled={!edit}
                 />
                     :
-                    <p className="text-4xl 2xl:text-6xl font-bold my-4 w-full break-words text-wrap">{company ? company.companyName : editableUser?.companyName}</p>
+                    <p className="text-4xl 2xl:text-6xl font-bold my-4 w-full min-h-12 break-words text-wrap">{company ? company.companyName : editableUser?.companyName}</p>
                 }
                 <div className="flex items-center">
                     <img className="w-6" src="/phone.png" alt="" />
@@ -95,7 +101,7 @@ export const Profile = ({ company, showLeft, setShowLeft }) => {
                         :
                         <a href={`tel:${company ? company.phone : editableUser?.phone ? editableUser.phone : user?.phone}`}
                             className="text-2xl ml-2 w-full"
-                        >{company ? company.phone : editableUser?.phone ? editableUser.phone : user?.phone}</a>
+                        >{company ? company?.phone ? company.phone : "Sin teléfono" : edit ? editableUser.phone : user?.phone ? user?.phone : "Sin teléfono"}</a>
                     }
                 </div>
                 <div className="flex mt-2 font-medium">
