@@ -22,7 +22,7 @@ export const Header = ({ company, showLeft, setShowLeft, showRight, setShowRight
                     onClick={() => setShowLeft(show => !show)}
                 >
                     <div className="rounded-full flex items-center justify-center bg-black text-sm h-6 w-6">i</div>
-                    <p className="text-black px-4">{company?.companyName}</p>
+                    <p className="hidden sm:block text-black px-4">{company?.companyName}</p>
                 </button>
                 <Link to={`${pathname.includes('company') ? '/company' : ''}/${company._id}/products`} className="bg-green-500 w-12 flex items-center justify-center">
                     <img className="w-5" src="/store.svg" alt="" />
