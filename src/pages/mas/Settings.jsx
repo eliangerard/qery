@@ -64,7 +64,7 @@ export const Settings = () => {
     }
 
     return (
-        <div className="w-full flex flex-col items-center">
+        <div className="w-full flex flex-col items-center p-4">
             <h2 className="font-['Prompt'] font-bold text-4xl my-4">Ajustes de +Q</h2>
             <div className="flex w-full">
                 <p className="text-2xl font-bold font-['Prompt'] text-white bg-green-500 mr-2 flex items-center p-2 justify-center flex-1">Asistente +Q</p>
