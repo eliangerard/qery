@@ -41,7 +41,7 @@ export const Profile = ({ company, showLeft, setShowLeft }) => {
                 <div className="absolute">
                     <SquareLoader color="#000"/>
                 </div>
-                <img className="absolute z-10 w-full h-full object-cover" src={company ? company.picture : editableUser.picture.startsWith('http') ? editableUser.picture?.substring(0, editableUser?.picture?.indexOf("=")) : editableUser.picture} alt=""
+                <img className="absolute z-10 w-full h-full object-cover" src={company ? company.picture.replace("=s96-c", "") : editableUser.picture.startsWith('http') ? editableUser.picture?.substring(0, editableUser?.picture?.indexOf("=")) : editableUser.picture} alt=""
                     onClick={() => {
                         if (!edit) return;
                         imageInput.current.click()
