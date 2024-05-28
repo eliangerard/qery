@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom"
+import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom"
 import { Home, Landing } from "../pages"
 import Users from "../pages/admin/Users"
 import { useContext, useEffect, useState } from "react"
@@ -67,7 +67,7 @@ export const VerifySession = () => {
             <Routes>
                 <Route path='/mas/*' element={<Subscribe />} />
                 <Route path='/*' element={user ? <Home /> : <Landing />} />
-                <Route path='/admin/users' element={<Users />} />
+                <Route path='/admin/users' element={user && user.admin ? <Users /> : <Navigate to={'/'}/>} />
             </Routes>
         }
         </>

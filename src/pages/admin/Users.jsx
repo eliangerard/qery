@@ -10,7 +10,7 @@ const Users = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetch(server + "/users/all")
+    fetch(server + "/users/all", {headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}})
       .then((res) => res.json())
       .then((res) => {
         setUsers(res);
@@ -27,7 +27,7 @@ const Users = () => {
       </header><div className="w-full p-4">
         <h2 className="text-center">Mostrando {users.length} usuarios</h2>
         <div className="w-full flex justify-center min-h-full">
-          <div className="flex flex-wrap w-full md:w-4/5">
+          <div className="grid lg:grid-cols-2 w-full md:w-4/5">
             {users.map((user, i) => (
               <User key={i} user={user} />
             ))}
