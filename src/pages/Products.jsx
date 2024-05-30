@@ -5,7 +5,7 @@ import { SquareLoader } from "react-spinners";
 import { useLocation } from "react-router-dom";
 import { Product } from "../ui/Product";
 
-export const Products = ({company, popup, sendMessage}) => {
+export const Products = ({ company, popup, sendMessage }) => {
 
     const { user } = useContext(UserContext);
     const [products, setProducts] = useState([]);
@@ -13,7 +13,7 @@ export const Products = ({company, popup, sendMessage}) => {
     
     const { pathname } = useLocation();
     console.log(window.location);
-    
+
     useEffect(() => {
         setLoading(true);
         fetch(`${server}/users/account/products/${user ? user._id : company._id}`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
@@ -26,7 +26,7 @@ export const Products = ({company, popup, sendMessage}) => {
                 setLoading(false);
                 setProducts(res.data);
             })
-    }, [])
+    }, [company])
 
     return (
         <>
