@@ -6,15 +6,20 @@ import { server } from "../util/server";
 export const Success = () => {
 
     const { user } = useContext(UserContext);
-    const navigate = useNavigate();
 
-    if (!user) navigate("/");
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
 
-    //Add verification of user subscribed
+    console.log(code);
 
     return (
         <>
             {
+                code ?
+                <>
+                    <h2 className="text-7xl font-bold text-center text-green-500">{code}</h2>
+                    <p className="text-center text-xl py-8">¡Anota este código para recoger tu pedido!</p>
+                </> :
                 !user ? <Navigate to="/" /> :
                     <>
                         <h2 className="text-7xl font-bold text-center text-green-500">¡Gracias por apoyar el proyecto!</h2>
