@@ -5,18 +5,18 @@ import { SquareLoader } from "react-spinners";
 import { useLocation } from "react-router-dom";
 import { Product } from "../ui/Product";
 
-export const Products = ({ company, popup, sendMessage }) => {
+export const Orders = ({ header = true, company, popup, sendMessage }) => {
 
     const { user } = useContext(UserContext);
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    
+
     const { pathname } = useLocation();
     console.log(window.location);
 
     useEffect(() => {
         setLoading(true);
-        fetch(`${server}/users/account/products/${user ? user._id : company._id}`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
+        fetch(`${server}/users/account/payouts`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
             .then(res => {
                 return res.json();
             })
@@ -24,7 +24,7 @@ export const Products = ({ company, popup, sendMessage }) => {
                 if (res.error) return console.error(res.error);
                 console.log(res);
                 setLoading(false);
-                setProducts(res.data);
+                setProducts(res);
             })
     }, [company])
 
@@ -32,7 +32,7 @@ export const Products = ({ company, popup, sendMessage }) => {
         <>
             {(user ? user.stripeAccount : company.stripeAccount) ?
                 !popup && <div className="flex justify-between my-4 items-center">
-                    <h2 className="text-4xl font-bold my-4">Productos</h2>
+                    <h2 className="text-4xl font-bold my-4">Ordenes</h2>
                     <a
                         className="bg-stripe-500 font-['Poppins'] text-white w-fit flex items-center justify-center p-2 font-semibold"
                         href="https://dashboard.stripe.com/"
@@ -42,8 +42,8 @@ export const Products = ({ company, popup, sendMessage }) => {
                     </a>
                 </div>
                 : <div className="flex justify-around my-4 items-center">
-                    <h2 className="text-4xl font-bold my-4">Productos</h2>
-                    <p className="font-medium">Muestra tus artículos vinculandoo tu cuenta de Stripe</p>
+                    <h2 className="text-4xl font-bold my-4">Ordenes</h2>
+                    <p className="font-medium">Observa tus ordenes vinculandoo tu cuenta de Stripe</p>
                     <button
                         className="bg-stripe-500 text-white w-fit flex items-center justify-center p-2 font-semibold"
                         onClick={() => {
@@ -81,7 +81,7 @@ export const Products = ({ company, popup, sendMessage }) => {
                 </div>
                 :
                 <div className="grid sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2 gap-6 mb-auto">
-                    {products.map(product => (
+                    {products?.map(product => (
                         <Product key={product._id} popup={popup} sendMessage={sendMessage} {...product} />
                     ))}
                 </div>

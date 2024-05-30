@@ -6,6 +6,7 @@ import { server } from "../util/server"
 import { Profile } from "../../components/Profile"
 import { FAQs } from "../../components/FAQs"
 import { Header } from "../../ui/Header"
+import { Orders } from "../Orders"
 
 export const Home = () => {
 
@@ -34,7 +35,7 @@ export const Home = () => {
                     <Route path="*" element={<Client company={company} />} />
                 </Routes>
             </div>
-            <FAQs clientSide={true} showRight={showRight} setShowRight={setShowRight} />
+            <FAQs company={company} clientSide={true} showRight={showRight} setShowRight={setShowRight} />
         </div>
     )
 }

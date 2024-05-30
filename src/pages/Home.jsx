@@ -28,7 +28,7 @@ export const Home = () => {
                     </Routes>
                 </div>
             </div>
-            <FAQs showRight={showRight} setShowRight={setShowRight} />
+            <FAQs company={user} showRight={showRight} setShowRight={setShowRight} />
         </div>
     )
 }

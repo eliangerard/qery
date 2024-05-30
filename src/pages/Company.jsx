@@ -1,6 +1,8 @@
 import { Link, Route, Routes } from "react-router-dom"
 import { Chats } from "./Chats"
 import { Products } from "./Products";
+import { Orders } from "./Orders";
+import { Store } from "./Store";
 
 export const Company = () => {
 
@@ -16,7 +18,8 @@ export const Company = () => {
             </div> */}
             <div className="w-full"></div>
             <Routes>
-                <Route path="products" element={<Products/>} />
+                <Route path="products/*" element={<Store/>} />
+                <Route path="products" element={<Store/>} />
                 <Route path="*" element={<Chats/>} />
                 
             </Routes>

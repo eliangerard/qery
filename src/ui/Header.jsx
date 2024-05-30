@@ -30,8 +30,7 @@ export const Header = ({ company, showLeft, setShowLeft, showRight, setShowRight
                 <div className="relative flex h-12">
                     <button className="relative bg-ab-500 w-12 h-12 flex items-center justify-center pr-1 pt-1 rounded-r-full hover:translate-x-[0.5rem] active:translate-x-[0.2rem] transition-all duration-75 z-10"
                         onClick={() => {
-                            const company = encodeURI(user ? user?._id : company?._id)
-                            const link = "https://qery.me/company/" + company;
+                            const link = "https://qery.me/company/" + company._id;
                             navigator.clipboard.writeText(link);
                             setShowCopied(true);
                             setTimeout(() => setShowCopied(false), 2000);
