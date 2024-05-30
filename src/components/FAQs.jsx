@@ -63,7 +63,7 @@ export const FAQs = ({ company, clientSide, showRight, setShowRight }) => {
                         <div className="hover:cursor-pointer"
                             onClick={() => setShow(prev => !prev)}
                         >
-                            <Add className="h-10 mr-2" />
+                            {questions.length > 0 && <Add className="h-10 mr-2" />}
                         </div>
                     }
                     FAQs
