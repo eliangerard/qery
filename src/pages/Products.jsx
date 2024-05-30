@@ -10,7 +10,7 @@ export const Products = ({ company, popup, sendMessage }) => {
     const { user } = useContext(UserContext);
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    
+
     const { pathname } = useLocation();
     console.log(window.location);
 
@@ -18,6 +18,7 @@ export const Products = ({ company, popup, sendMessage }) => {
         setLoading(true);
         fetch(`${server}/users/account/products/${user ? user._id : company._id}`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
             .then(res => {
+                if (res.status === 400) return setLoading(false);
                 return res.json();
             })
             .then(res => {
@@ -43,7 +44,6 @@ export const Products = ({ company, popup, sendMessage }) => {
                 </div>
                 : <div className="flex justify-around my-4 items-center">
                     <h2 className="text-4xl font-bold my-4">Productos</h2>
-                    <p className="font-medium">Muestra tus artículos vinculandoo tu cuenta de Stripe</p>
                     <button
                         className="bg-stripe-500 text-white w-fit flex items-center justify-center p-2 font-semibold"
                         onClick={() => {
@@ -80,11 +80,16 @@ export const Products = ({ company, popup, sendMessage }) => {
                     <SquareLoader color="#000" size={50} />
                 </div>
                 :
-                <div className="grid sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2 gap-6 mb-auto">
-                    {products.map(product => (
-                        <Product key={product._id} popup={popup} sendMessage={sendMessage} {...product} />
-                    ))}
-                </div>
+
+                products.length > 0 ?
+                    <div className="grid sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2 gap-6 mb-auto">
+                        {products?.map(product => (
+                            <Product key={product._id} popup={popup} sendMessage={sendMessage} {...product} />
+                        ))}
+                    </div>
+                    :
+                    user && !user.stripeAccount && <p className="font-medium mb-auto w-full text-center">Muestra tus artículos vinculando tu cuenta de Stripe</p>
+
             }
         </>
     )
